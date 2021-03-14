@@ -462,6 +462,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1039664451028954655, guid: ff53654d4b308a049aba6631505f2c8b, type: 3}
+      propertyPath: m_Name
+      value: Body
+      objectReference: {fileID: 0}
     - target: {fileID: 1593276657704097279, guid: ff53654d4b308a049aba6631505f2c8b, type: 3}
       propertyPath: m_Name
       value: Pillar
