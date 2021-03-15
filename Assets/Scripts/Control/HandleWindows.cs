@@ -30,7 +30,7 @@ public class HandleWindows : MonoBehaviour, IHandleInput
 
     public bool IsDoubleJump()
     {
-        if (Input.GetKeyDown("space"))
+        if (Input.GetKey("w"))
         {
             return true;
         }

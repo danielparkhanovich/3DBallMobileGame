@@ -30,6 +30,12 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Bounce !");
             isBounce = true;
         }
+        else if (collision.gameObject.tag == "Trampoline")
+        {
+            collision.gameObject.GetComponentInParent<Trampoline>().BumpBall(gameObject);
+            Debug.Log("Trampoline !");
+            isBounce = true;
+        }
     }
 
     void Start()
@@ -62,6 +68,16 @@ public class PlayerController : MonoBehaviour
                 currentRotateDirection -= 2 * Mathf.PI;
             }
         }
+        else if (handleInput.IsDoubleJump())
+        {
+            Debug.Log("Thrust");
+            rb.AddRelativeForce(Vector3.forward * 500.0f);
+        }
+    }
+
+    public void IncreaseSpeedOfForwardMovement(float value)
+    {
+        speedOfForwardMovement += value;
     }
 
     void Update()

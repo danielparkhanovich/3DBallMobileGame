@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ProceduralGeneration : MonoBehaviour
 {
+    public static ProceduralGeneration instance = null;
+
     [Header("Track")]
     [SerializeField] private Transform center;
     [SerializeField] private Transform ballTransform;
@@ -25,10 +27,22 @@ public class ProceduralGeneration : MonoBehaviour
     [SerializeField] private Vector2 pillarsBodyHeight;
 
     private int prerenderRings;
+    private bool isPrerendering;
     private int ring = 1;
+    private int ballRing = 1;
 
     void Start()
     {
+        // Singletone pattern
+        if (instance == null)
+        { 
+            instance = this; 
+        }
+        else if (instance == this)
+        { 
+            Destroy(gameObject); 
+        }
+
         prerenderRings = Mathf.RoundToInt(renderRadius / pillarsRingStep);
 
         if (prerenderRings == 0)
@@ -37,11 +51,22 @@ public class ProceduralGeneration : MonoBehaviour
         }
 
         // Prerender
+        isPrerendering = true;
         for (int i = 1; i <= prerenderRings; i++)
         {
             GenerateRing(i);
             ring = i;
         }
+        isPrerendering = false;
+    }
+
+    public float GetRing()
+    {
+        return ring;
+    }
+    public float GetBallRing()
+    {
+        return ballRing;
     }
 
     void GenerateRing(int ring)
@@ -83,12 +108,32 @@ public class ProceduralGeneration : MonoBehaviour
             float h = Random.Range(pillarsBodyHeight.x, pillarsBodyHeight.y);
             float s = Random.Range(pillarsFloorSize.x, pillarsFloorSize.y);
 
-            Vector3 position = new Vector3(x, transform.position.y, z);
-            GameObject pillar = Instantiate(pillarObj, position, Quaternion.identity);
-            // Coloring
-            pillar.transform.GetChild(0).GetComponent<Renderer>().material.color = ringColor;
-            pillar.transform.localScale = new Vector3(s, h, s);
+            CreatePillar(x, z, s, h, ringColor, !isPrerendering, ring);
         }
+    }
+
+    public bool IsRender()
+    {
+        return isPrerendering;
+    }
+
+    private GameObject CreatePillar(float x, float z, float s, float h, Color ringColor, bool isAnimate, int ring)
+    {
+        Vector3 position = new Vector3(x, transform.position.y, z);
+        GameObject pillar = Instantiate(pillarObj, position, Quaternion.identity);
+        pillar.GetComponent<Pillar>().SetRing(ring);
+        // Animation
+        if (isAnimate)
+        {
+            Debug.Log("Animate !");
+            pillar.GetComponent<Animator>().SetTrigger("Appear");
+        }
+        
+        // Coloring
+        Transform pillarModel = pillar.transform.GetChild(0);
+        pillarModel.GetChild(0).GetComponent<Renderer>().material.color = ringColor;
+        pillarModel.localScale = new Vector3(s, h, s);
+        return pillar;
     }
 
     void OnDrawGizmosSelected()
@@ -111,6 +156,7 @@ public class ProceduralGeneration : MonoBehaviour
         if (Vector2.Distance(ballPos, centerPos) + renderRadius >= pillarsRingStep * ring + (pillarsFloorSize.y / 2))
         {
             ring += 1;
+            ballRing += 1;
             GenerateRing(ring);
         }
     }

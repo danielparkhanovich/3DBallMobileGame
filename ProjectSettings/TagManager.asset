@@ -7,6 +7,7 @@ TagManager:
   - Bounce
   - Surface
   - Pillar
+  - Trampoline
   layers:
   - Default
   - TransparentFX
