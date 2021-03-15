@@ -44,19 +44,19 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void manageInput()
+    void ManageInput()
     {
-        if (handleInput.isLeft())
+        if (handleInput.IsLeft())
         {
-            currentRotateDirection -= speedOfRotate * Time.deltaTime * handleInput.getSingleAngleRotate();
+            currentRotateDirection -= speedOfRotate * Time.deltaTime * handleInput.GetSingleAngleRotate();
             if (currentRotateDirection < 0)
             {
                 currentRotateDirection += 2 * Mathf.PI;
             }
         }
-        else if (handleInput.isRight())
+        else if (handleInput.IsRight())
         {
-            currentRotateDirection += speedOfRotate * Time.deltaTime * handleInput.getSingleAngleRotate();
+            currentRotateDirection += speedOfRotate * Time.deltaTime * handleInput.GetSingleAngleRotate();
             if (currentRotateDirection > 2 * Mathf.PI)
             {
                 currentRotateDirection -= 2 * Mathf.PI;
@@ -66,7 +66,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        manageInput();
+        ManageInput();
         transform.eulerAngles = new Vector3(0, currentRotateDirection * (180 / Mathf.PI), 0);
 
         // Movement 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HandleWindows : MonoBehaviour, IHandleInput
 {
-    public bool isLeft()
+    public bool IsLeft()
     {
         if (Input.GetKey("a"))
         {
@@ -16,7 +16,7 @@ public class HandleWindows : MonoBehaviour, IHandleInput
         }
     }
 
-    public bool isRight()
+    public bool IsRight()
     {
         if (Input.GetKey("d"))
         {
@@ -28,7 +28,7 @@ public class HandleWindows : MonoBehaviour, IHandleInput
         }
     }
 
-    public bool isDoubleJump()
+    public bool IsDoubleJump()
     {
         if (Input.GetKeyDown("space"))
         {
@@ -40,7 +40,7 @@ public class HandleWindows : MonoBehaviour, IHandleInput
         }
     }
 
-    public float getSingleAngleRotate()
+    public float GetSingleAngleRotate()
     {
         return 0.5f;
     }
