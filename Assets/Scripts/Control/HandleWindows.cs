@@ -2,6 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/* Controls: 
+   A - rotate to left 
+   D - rotate to right
+   W - thrust
+
+ */
+
 public class HandleWindows : MonoBehaviour, IHandleInput
 {
     public bool IsLeft()
@@ -28,7 +35,7 @@ public class HandleWindows : MonoBehaviour, IHandleInput
         }
     }
 
-    public bool IsDoubleJump()
+    public bool IsThrust()
     {
         if (Input.GetKey("w"))
         {

@@ -14,20 +14,27 @@ public class ProceduralGeneration : MonoBehaviour
     [Header("Renderer")]
     [SerializeField] private float renderRadius;
     [SerializeField] private float renderFOV;
+    [SerializeField] private bool cutFOV;
 
     [Header("Pillars")]
     [SerializeField] private GameObject pillarObj;
+    [SerializeField] private GameObject trampolineObj;
 
     // Pillars generation parameters
     [SerializeField] private float pillarsRingStep;
     [SerializeField] private float pillarsСloseness;
     [SerializeField] private float pillarsFrequency;   // e.g. 5 -> 360/5 = 72, pillar on every 72 deg
-
     [SerializeField] private Vector2 pillarsFloorSize;
     [SerializeField] private Vector2 pillarsBodyHeight;
 
+    //Trampolins generation parameters
+    [Range(0, 1)]
+    [SerializeField] private float trampolineSpawnChance;
+    [SerializeField] private Vector2 trampolineFloorSize;
+    [SerializeField] private Vector2 trampolineBodyHeight;
+
     private int prerenderRings;
-    private bool isPrerendering;
+    private bool prerendering;
     private int ring = 1;
     private int ballRing = 1;
 
@@ -51,13 +58,13 @@ public class ProceduralGeneration : MonoBehaviour
         }
 
         // Prerender
-        isPrerendering = true;
+        prerendering = true;
         for (int i = 1; i <= prerenderRings; i++)
         {
             GenerateRing(i);
             ring = i;
         }
-        isPrerendering = false;
+        prerendering = false;
     }
 
     public float GetRing()
@@ -69,7 +76,8 @@ public class ProceduralGeneration : MonoBehaviour
         return ballRing;
     }
 
-    void GenerateRing(int ring)
+
+    private void GenerateRing(int ring)
     {
         float rPrev = pillarsRingStep * (ring - 1) + 10.0f;
         float r = pillarsRingStep * ring;
@@ -88,8 +96,21 @@ public class ProceduralGeneration : MonoBehaviour
         Vector2 ballPos = new Vector2(ballTransform.position.x, ballTransform.position.z);
         Vector2 centerPos = new Vector2(center.position.x, center.position.z);
 
-        float thetaMin = -Mathf.Atan2(centerPos.y - ballPos.y, centerPos.x - ballPos.x)*(180.0f/Mathf.PI) - renderFOV/2;
+        float ballMoveAngle = Mathf.Atan2(ballPos.y - centerPos.y, ballPos.x - centerPos.x) * (180.0f / Mathf.PI);
+        if (ballMoveAngle < 0.0f)
+        {
+            ballMoveAngle += 360.0f;
+        }
+
+        // Cut FOV
+        if (ring > 5 && cutFOV)
+        {
+            renderFOV /= (1.0f + 1.0f/(ring*pillarsRingStep*0.05f));
+            Debug.Log(renderFOV);
+        }
+        float thetaMin = ballMoveAngle - renderFOV/2;
         float thetaMax = thetaMin + renderFOV;
+
 
         Color ringColor = new Color(Random.value, Random.value, Random.value);
 
@@ -97,35 +118,50 @@ public class ProceduralGeneration : MonoBehaviour
         for (float theta = thetaMin; theta < thetaMax; theta += angleStep)
         {
 
-            Debug.Log("rPrev: " + rPrev);
-            Debug.Log("r: " + r);
-            Debug.Log("Theta: " + theta);
-
             float rDist = Random.Range(rPrev, r); //Mathf.Sqrt(Random.value)
             float x = center.position.x + rDist * Mathf.Cos(theta * (Mathf.PI / 180.0f));
             float z = center.position.z + rDist * Mathf.Sin(theta * (Mathf.PI / 180.0f));
 
-            float h = Random.Range(pillarsBodyHeight.x, pillarsBodyHeight.y);
-            float s = Random.Range(pillarsFloorSize.x, pillarsFloorSize.y);
 
-            CreatePillar(x, z, s, h, ringColor, !isPrerendering, ring);
+            Vector2 bodyHeight;
+            Vector2 floorSize;
+            GameObject obj;
+
+            // Default pillar
+            if (Random.value > trampolineSpawnChance)
+            {
+                bodyHeight = pillarsBodyHeight;
+                floorSize = pillarsFloorSize;
+                obj = pillarObj;
+            }
+            // Trampoline pillar
+            else
+            {
+                bodyHeight = trampolineBodyHeight;
+                floorSize = trampolineFloorSize;
+                obj = trampolineObj;
+            }
+            float h = Random.Range(bodyHeight.x, bodyHeight.y);
+            float s = Random.Range(floorSize.x, floorSize.y);
+
+            CreatePillar(x, z, s, h, ringColor, obj, !prerendering, ring);
         }
     }
 
     public bool IsRender()
     {
-        return isPrerendering;
+        return prerendering;
     }
 
-    private GameObject CreatePillar(float x, float z, float s, float h, Color ringColor, bool isAnimate, int ring)
+    private GameObject CreatePillar(float x, float z, float s, float h, Color ringColor, GameObject obj, bool isAnimate, int ring)
     {
         Vector3 position = new Vector3(x, transform.position.y, z);
-        GameObject pillar = Instantiate(pillarObj, position, Quaternion.identity);
+        GameObject pillar = Instantiate(obj, position, Quaternion.identity);
         pillar.GetComponent<Pillar>().SetRing(ring);
-        // Animation
+
+        // Animations
         if (isAnimate)
-        {
-            Debug.Log("Animate !");
+        { 
             pillar.GetComponent<Animator>().SetTrigger("Appear");
         }
         
@@ -150,8 +186,6 @@ public class ProceduralGeneration : MonoBehaviour
         // new ring
         Vector2 ballPos = new Vector2(ballTransform.position.x, ballTransform.position.z);
         Vector2 centerPos = new Vector2(center.position.x, center.position.z);
-
-        Debug.Log("Ring: " + ring);
 
         if (Vector2.Distance(ballPos, centerPos) + renderRadius >= pillarsRingStep * ring + (pillarsFloorSize.y / 2))
         {

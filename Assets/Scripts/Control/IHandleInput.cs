@@ -6,6 +6,6 @@ public interface IHandleInput
 {
     bool IsLeft();
     bool IsRight();
-    bool IsDoubleJump();
+    bool IsThrust();
     float GetSingleAngleRotate();
 }

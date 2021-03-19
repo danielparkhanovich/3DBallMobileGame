@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 992556734}
   m_Layer: 0
   m_Name: Pillar
-  m_TagString: Untagged
+  m_TagString: Bounce
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -64,7 +64,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 426b5c13bcff75e4ab98d4d84b15b438, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ringsToDestroy: 1
+  ringsToDestroy: 2
 --- !u!1001 &4161205732698254398
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -75,6 +75,10 @@ PrefabInstance:
     - target: {fileID: 1593276657704097279, guid: ff53654d4b308a049aba6631505f2c8b, type: 3}
       propertyPath: m_Name
       value: PillarModel
+      objectReference: {fileID: 0}
+    - target: {fileID: 1593276657704097279, guid: ff53654d4b308a049aba6631505f2c8b, type: 3}
+      propertyPath: m_TagString
+      value: Bounce
       objectReference: {fileID: 0}
     - target: {fileID: 2010971425097345198, guid: ff53654d4b308a049aba6631505f2c8b, type: 3}
       propertyPath: m_RootOrder
@@ -119,6 +123,14 @@ PrefabInstance:
     - target: {fileID: 2010971425097345198, guid: ff53654d4b308a049aba6631505f2c8b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4524843234628436465, guid: ff53654d4b308a049aba6631505f2c8b, type: 3}
+      propertyPath: m_Convex
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4524843234628436465, guid: ff53654d4b308a049aba6631505f2c8b, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 415222633, guid: ff53654d4b308a049aba6631505f2c8b, type: 3}

@@ -23,13 +23,12 @@ public class Pillar : MonoBehaviour
         {
             if (ProceduralGeneration.instance.GetBallRing() != compareValue)
             {
-                elapsedRings += 1;
                 compareValue = ProceduralGeneration.instance.GetBallRing();
             }
 
-            bool isFar = elapsedRings - fixedRing > ringsToDestroy;
+            bool farToBall = compareValue - fixedRing > ringsToDestroy;
 
-            if (isFar)
+            if (farToBall)
             {
                 Destroy(gameObject);
             }

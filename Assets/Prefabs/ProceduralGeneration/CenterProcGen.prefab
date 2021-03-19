@@ -45,11 +45,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   center: {fileID: 698509104843812556}
   ballTransform: {fileID: 0}
-  renderRadius: 50
-  renderFOV: 360
+  renderRadius: 100
+  renderFOV: 120
+  cutFOV: 1
   pillarObj: {fileID: 7127400545993180198, guid: be72d9a4113477c478039f6b271b9daf, type: 3}
+  trampolineObj: {fileID: 5636110088423677250, guid: 5cbf5a7e8c642b34492eb885dfd2ae9a, type: 3}
   pillarsRingStep: 25
   "pillars\u0421loseness": 0
-  pillarsFrequency: 10
+  pillarsFrequency: 12
   pillarsFloorSize: {x: 0.5, y: 1}
   pillarsBodyHeight: {x: 0.7, y: 0.9}
+  trampolineSpawnChance: 0.2
+  trampolineFloorSize: {x: 0.5, y: 1}
+  trampolineBodyHeight: {x: 0.6, y: 0.7}

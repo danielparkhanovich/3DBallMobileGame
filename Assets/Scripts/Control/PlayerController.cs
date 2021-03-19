@@ -10,17 +10,18 @@ public class PlayerController : MonoBehaviour
         Android,
         IOS
     }
-    [SerializeField] private Platform curentPlatform;
+    [SerializeField] private Platform curentSystemPlatform;
     [SerializeField] private HandleWindows handleWindows;
-
-    private IHandleInput handleInput;
-    private Rigidbody rb;
 
     [SerializeField] private float speedOfRotate;
     [SerializeField] private float speedOfForwardMovement;
 
+    private IHandleInput handleInput;
+    private Thrust thrust;
+    private Rigidbody rb;
+
     private float currentRotateDirection = 0.0f;
-    private bool isBounce = false;
+    private bool bounce = false;
 
 
     private void OnCollisionEnter(Collision collision)
@@ -28,23 +29,24 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.tag == "Bounce")
         {
             Debug.Log("Bounce !");
-            isBounce = true;
+            bounce = true;
         }
         else if (collision.gameObject.tag == "Trampoline")
         {
             collision.gameObject.GetComponentInParent<Trampoline>().BumpBall(gameObject);
             Debug.Log("Trampoline !");
-            isBounce = true;
+            bounce = true;
         }
     }
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-
         handleWindows = GetComponent<HandleWindows>();
 
-        if (curentPlatform == Platform.Windows)
+        thrust = GetComponent<Thrust>();
+
+        if (curentSystemPlatform == Platform.Windows)
         {
             handleInput = handleWindows;
         }
@@ -68,10 +70,11 @@ public class PlayerController : MonoBehaviour
                 currentRotateDirection -= 2 * Mathf.PI;
             }
         }
-        else if (handleInput.IsDoubleJump())
+        else if (handleInput.IsThrust())
         {
-            Debug.Log("Thrust");
-            rb.AddRelativeForce(Vector3.forward * 500.0f);
+            float force = thrust.ToThrust();
+            //rb.AddRelativeForce(force);
+            transform.Translate(Vector3.forward * force);
         }
     }
 
@@ -91,6 +94,6 @@ public class PlayerController : MonoBehaviour
             rb.velocity.y,
             transform.forward.z * speedOfForwardMovement);
 
-        isBounce = false;
+        bounce = false;
     }
 }
