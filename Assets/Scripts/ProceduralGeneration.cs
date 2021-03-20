@@ -21,20 +21,8 @@ public class ProceduralGeneration : MonoBehaviour
     [SerializeField] private GameObject pillarObj;
     [SerializeField] private GameObject trampolineObj;
 
-    // Pillars generation parameters
-    [SerializeField] private float pillarsRingStep;
-    [SerializeField] private float pillarsСloseness;
-    [SerializeField] private float pillarsFrequency;   // e.g. 5 -> 360/5 = 72, pillar on every 72 deg
-    [SerializeField] private Vector2 pillarsFloorSize;
-    [SerializeField] private Vector2 pillarsBodyHeight;
-
-    //Trampolins generation parameters
-    [Range(0, 1)]
-    [SerializeField] private float trampolineSpawnChance;
-    [SerializeField] private Vector2 trampolineFloorSize;
-    [SerializeField] private Vector2 trampolineBodyHeight;
-
     private Bioms bioms;
+    private float defaultRenderRadius;
     private int prerenderRings;
     private bool prerendering;
     private int ring = 1;
@@ -52,11 +40,10 @@ public class ProceduralGeneration : MonoBehaviour
             Destroy(gameObject); 
         }
 
-        // Bioms
-        bioms = GetComponent<Bioms>();
-
         // Prerender
+        float pillarsRingStep = Bioms.instance.GetPillarsRingStep();
         prerenderRings = Mathf.RoundToInt(renderRadius / pillarsRingStep);
+        defaultRenderRadius = renderRadius;
 
         if (prerenderRings == 0)
         {
@@ -84,8 +71,30 @@ public class ProceduralGeneration : MonoBehaviour
 
     private void GenerateRing(int ring)
     {
-        float rPrev = pillarsRingStep * (ring - 1) + 10.0f;
-        float r = pillarsRingStep * ring;
+        // Bioms
+        if (biomsON)
+        {
+            Bioms.instance.CheckNewBiom(ballRing);
+            if (renderRadius < Bioms.instance.GetPillarsRingStep()*Bioms.instance.GetCurrentBiom() + defaultRenderRadius)
+            {
+                renderRadius += Bioms.instance.GetPillarsRingStep();
+            }
+        }
+
+        // pillars param init zone
+        float pillarsRingStep = Bioms.instance.GetPillarsRingStep();
+
+        float pillarsFrequency = Bioms.instance.GetPillarsFrequency();
+        Vector2 pillarsBodyHeight = Bioms.instance.GetPillarsBodyHeight();
+        Vector2 pillarsFloorSize = Bioms.instance.GetPillarsFloorSize();
+
+        // trampoline param init zone
+        float trampolineSpawnChance = Bioms.instance.GetTrampolineSpawnChance();
+        Vector2 trampolineBodyHeight = Bioms.instance.GetTrampolineBodyHeight();
+        Vector2 trampolineFloorSize = Bioms.instance.GetTrampolineFloorSize();
+
+        float rPrev = pillarsRingStep * (ring - 1 - Bioms.instance.GetCurrentBiom()) + 10.0f;
+        float r = pillarsRingStep * (ring - Bioms.instance.GetCurrentBiom());
 
         int numberOfPillars = 0;
         if (ring == 1)
@@ -111,7 +120,7 @@ public class ProceduralGeneration : MonoBehaviour
         if (ring > 5 && cutFOV)
         {
             renderFOV /= (1.0f + 1.0f/(ring*pillarsRingStep*0.05f));
-            Debug.Log(renderFOV);
+            // Debug.Log(renderFOV);
         }
         float thetaMin = ballMoveAngle - renderFOV/2;
         float thetaMax = thetaMin + renderFOV;
@@ -180,9 +189,10 @@ public class ProceduralGeneration : MonoBehaviour
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
+        float pillarsRingStep = Bioms.instance.GetPillarsRingStep();
         for (int i = 1; i <= ring; i++)
         {
-            UnityEditor.Handles.DrawWireDisc(center.position, center.up, pillarsRingStep * i);
+           UnityEditor.Handles.DrawWireDisc(center.position, center.up, pillarsRingStep * i);
         }
     }
 
@@ -191,6 +201,9 @@ public class ProceduralGeneration : MonoBehaviour
         // new ring
         Vector2 ballPos = new Vector2(ballTransform.position.x, ballTransform.position.z);
         Vector2 centerPos = new Vector2(center.position.x, center.position.z);
+
+        float pillarsRingStep = Bioms.instance.GetPillarsRingStep();
+        Vector2 pillarsFloorSize = Bioms.instance.GetPillarsFloorSize();
 
         if (Vector2.Distance(ballPos, centerPos) + renderRadius >= pillarsRingStep * ring + (pillarsFloorSize.y / 2))
         {

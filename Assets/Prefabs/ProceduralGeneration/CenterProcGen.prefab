@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 698509104843812556}
   - component: {fileID: 698509104843812557}
+  - component: {fileID: 1701278041}
   m_Layer: 0
   m_Name: CenterProcGen
   m_TagString: Untagged
@@ -48,13 +49,44 @@ MonoBehaviour:
   renderRadius: 100
   renderFOV: 120
   cutFOV: 1
+  biomsON: 1
   pillarObj: {fileID: 7127400545993180198, guid: be72d9a4113477c478039f6b271b9daf, type: 3}
   trampolineObj: {fileID: 5636110088423677250, guid: 5cbf5a7e8c642b34492eb885dfd2ae9a, type: 3}
-  pillarsRingStep: 25
-  "pillars\u0421loseness": 0
-  pillarsFrequency: 12
-  pillarsFloorSize: {x: 0.5, y: 1}
-  pillarsBodyHeight: {x: 0.7, y: 0.9}
-  trampolineSpawnChance: 0.2
-  trampolineFloorSize: {x: 0.5, y: 1}
-  trampolineBodyHeight: {x: 0.6, y: 0.7}
+--- !u!114 &1701278041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 698509104843812558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 468636f270b8e6c4c827668056a61d38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  numberOfBioms: 2
+  ringsToNext: 10
+  pillarsRingStep:
+  - 25
+  - 30
+  "pillars\u0421loseness":
+  - 0
+  - 0
+  pillarsFrequency:
+  - 12
+  - 9
+  pillarsFloorSize:
+  - {x: 0.5, y: 1}
+  - {x: 0.4, y: 0.8}
+  pillarsBodyHeight:
+  - {x: 0.7, y: 0.9}
+  - {x: 0.9, y: 1.2}
+  trampolineSpawnChance:
+  - 0.1
+  - 0.08
+  trampolineFloorSize:
+  - {x: 0.5, y: 1}
+  - {x: 0.4, y: 0.8}
+  trampolineBodyHeight:
+  - {x: 0.6, y: 0.7}
+  - {x: 0.7, y: 0.8}

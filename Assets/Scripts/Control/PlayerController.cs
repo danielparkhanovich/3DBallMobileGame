@@ -28,13 +28,13 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.tag == "Bounce")
         {
-            Debug.Log("Bounce !");
+           // Debug.Log("Bounce !");
             bounce = true;
         }
         else if (collision.gameObject.tag == "Trampoline")
         {
             collision.gameObject.GetComponentInParent<Trampoline>().BumpBall(gameObject);
-            Debug.Log("Trampoline !");
+           // Debug.Log("Trampoline !");
             bounce = true;
         }
     }
