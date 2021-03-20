@@ -17,6 +17,7 @@ public class ProceduralGeneration : MonoBehaviour
     [SerializeField] private bool cutFOV;
 
     [Header("Pillars")]
+    [SerializeField] private bool biomsON;
     [SerializeField] private GameObject pillarObj;
     [SerializeField] private GameObject trampolineObj;
 
@@ -33,6 +34,7 @@ public class ProceduralGeneration : MonoBehaviour
     [SerializeField] private Vector2 trampolineFloorSize;
     [SerializeField] private Vector2 trampolineBodyHeight;
 
+    private Bioms bioms;
     private int prerenderRings;
     private bool prerendering;
     private int ring = 1;
@@ -50,6 +52,10 @@ public class ProceduralGeneration : MonoBehaviour
             Destroy(gameObject); 
         }
 
+        // Bioms
+        bioms = GetComponent<Bioms>();
+
+        // Prerender
         prerenderRings = Mathf.RoundToInt(renderRadius / pillarsRingStep);
 
         if (prerenderRings == 0)
@@ -57,7 +63,6 @@ public class ProceduralGeneration : MonoBehaviour
             prerenderRings = 1;
         }
 
-        // Prerender
         prerendering = true;
         for (int i = 1; i <= prerenderRings; i++)
         {

@@ -83,6 +83,11 @@ public class PlayerController : MonoBehaviour
         speedOfForwardMovement += value;
     }
 
+    public Vector3 getBallVelocity()
+    {
+        return rb.velocity;
+    }
+
     void Update()
     {
         ManageInput();
