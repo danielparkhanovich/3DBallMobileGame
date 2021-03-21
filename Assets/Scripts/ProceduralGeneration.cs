@@ -205,6 +205,18 @@ public class ProceduralGeneration : MonoBehaviour
             }
         }
 
+        // Diamonds
+        if (Random.value <= Bioms.instance.GetDiamondsSpawnChance() && obj.tag == "Bounce")
+        {
+            Debug.Log("SPAWN !!!");
+            GameObject diamond = Diamond.SpawnDiamond(
+                Bioms.instance.GetDiamondsVariety(), 
+                Bioms.instance.GetDiamondsPrefabs(), 
+                Bioms.instance.GetDiamondsProbabilities(), 
+                pillarModel.GetChild(0));
+            diamond.transform.parent = pillarModel;
+        }
+
         return pillar;
     }
 
@@ -226,13 +238,6 @@ public class ProceduralGeneration : MonoBehaviour
 
         float pillarsRingStep = Bioms.instance.GetPillarsRingStep();
         Vector2 pillarsFloorSize = Bioms.instance.GetPillarsFloorSize();
-
-        //if (Vector2.Distance(ballPos, centerPos) + renderRadius >= pillarsRingStep * ring + (pillarsFloorSize.y / 2))
-        //{
-        //    ring += 1;
-        //    ballRing += 1;
-        //    GenerateRing(ring);
-        //}
 
         if (Vector2.Distance(ballPos, centerPos) >= ballDistance + oldPillarsRingStep)
         {
