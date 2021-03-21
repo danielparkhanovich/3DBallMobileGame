@@ -64,7 +64,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 426b5c13bcff75e4ab98d4d84b15b438, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ringsToDestroy: 2
+  ringsToDestroy: 1
 --- !u!1001 &4161205732698254398
 PrefabInstance:
   m_ObjectHideFlags: 0

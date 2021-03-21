@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -13,8 +15,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Platform curentSystemPlatform;
     [SerializeField] private HandleWindows handleWindows;
 
+    //UI labels
+    [SerializeField] private GameObject textRings;
+
     [SerializeField] private float speedOfRotate;
     [SerializeField] private float speedOfForwardMovement;
+    [SerializeField] private Vector2 maxSpeed;
+    [SerializeField] private Vector2 minSpeed;
 
     private IHandleInput handleInput;
     private Thrust thrust;
@@ -28,13 +35,26 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.tag == "Bounce")
         {
-           // Debug.Log("Bounce !");
+            // Debug.Log("Bounce !");
+            if (textRings)
+            {
+                textRings.GetComponent<TMPro.TextMeshProUGUI>().text = "Rings: " + ProceduralGeneration.instance.GetBallRing();
+            }
+            Puddle puddle = collision.gameObject.GetComponent<Puddle>();
+            if (puddle)
+            {
+                puddle.AffectBall(gameObject);
+            }
             bounce = true;
         }
         else if (collision.gameObject.tag == "Trampoline")
         {
             collision.gameObject.GetComponentInParent<Trampoline>().BumpBall(gameObject);
-           // Debug.Log("Trampoline !");
+            // Debug.Log("Trampoline !");
+            if (textRings)
+            {
+                textRings.GetComponent<TMPro.TextMeshProUGUI>().text = "Rings: " + ProceduralGeneration.instance.GetBallRing();
+            }
             bounce = true;
         }
     }
@@ -78,9 +98,26 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public float GetSpeedOfForwardMovement()
+    {
+        return speedOfForwardMovement;
+    }
+
     public void IncreaseSpeedOfForwardMovement(float value)
     {
-        speedOfForwardMovement += value;
+        if (speedOfForwardMovement + value < maxSpeed.x && 
+            speedOfForwardMovement + value > minSpeed.x)
+        {
+            speedOfForwardMovement += value;
+        }
+        else if (speedOfForwardMovement + value > maxSpeed.x)
+        {
+            speedOfForwardMovement = maxSpeed.x;
+        }
+        else if (speedOfForwardMovement + value > minSpeed.x)
+        {
+            speedOfForwardMovement = minSpeed.x;
+        }
     }
 
     public Vector3 getBallVelocity()

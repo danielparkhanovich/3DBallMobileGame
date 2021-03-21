@@ -19,6 +19,8 @@ public class CameraController : MonoBehaviour
     private void Update()
     {
         float velocity = Vector3.Magnitude(target.GetComponent<PlayerController>().getBallVelocity());
-        transform.localPosition = new Vector3(defaultPosition.x, defaultPosition.y + (velocity / 100) * cameraZoomForce.y, defaultPosition.z - (velocity / 50) * cameraZoomForce.y);
+        transform.localPosition = new Vector3(defaultPosition.x, 
+                                              defaultPosition.y + (velocity / 100) * cameraZoomForce.y, 
+                                              defaultPosition.z - (velocity / 50) * cameraZoomForce.y);
     }
 }

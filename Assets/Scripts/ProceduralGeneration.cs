@@ -27,6 +27,9 @@ public class ProceduralGeneration : MonoBehaviour
     private bool prerendering;
     private int ring = 1;
     private int ballRing = 1;
+    private float fixedR = 0;
+    private float ballDistance = 0;
+    private float oldPillarsRingStep;
 
     void Start()
     {
@@ -41,7 +44,8 @@ public class ProceduralGeneration : MonoBehaviour
         }
 
         // Prerender
-        float pillarsRingStep = Bioms.instance.GetPillarsRingStep();
+        float pillarsRingStep = Bioms.GetInstance().GetPillarsRingStep();
+        oldPillarsRingStep = pillarsRingStep;
         prerenderRings = Mathf.RoundToInt(renderRadius / pillarsRingStep);
         defaultRenderRadius = renderRadius;
 
@@ -77,7 +81,7 @@ public class ProceduralGeneration : MonoBehaviour
             Bioms.instance.CheckNewBiom(ballRing);
             if (renderRadius < Bioms.instance.GetPillarsRingStep()*Bioms.instance.GetCurrentBiom() + defaultRenderRadius)
             {
-                renderRadius += Bioms.instance.GetPillarsRingStep();
+                //renderRadius += Bioms.instance.GetPillarsRingStep();
             }
         }
 
@@ -93,8 +97,11 @@ public class ProceduralGeneration : MonoBehaviour
         Vector2 trampolineBodyHeight = Bioms.instance.GetTrampolineBodyHeight();
         Vector2 trampolineFloorSize = Bioms.instance.GetTrampolineFloorSize();
 
-        float rPrev = pillarsRingStep * (ring - 1 - Bioms.instance.GetCurrentBiom()) + 10.0f;
-        float r = pillarsRingStep * (ring - Bioms.instance.GetCurrentBiom());
+        //float rPrev = pillarsRingStep * (ring - 1 - Bioms.instance.GetCurrentBiom()) + 10.0f;
+        //float r = pillarsRingStep * (ring - Bioms.instance.GetCurrentBiom());
+        float rPrev = fixedR + 10.0f;
+        fixedR += pillarsRingStep;
+        float r = fixedR;
 
         int numberOfPillars = 0;
         if (ring == 1)
@@ -183,13 +190,28 @@ public class ProceduralGeneration : MonoBehaviour
         Transform pillarModel = pillar.transform.GetChild(0);
         pillarModel.GetChild(0).GetComponent<Renderer>().material.color = ringColor;
         pillarModel.localScale = new Vector3(s, h, s);
+
+        // Puddle
+        if (Random.value <= Bioms.instance.GetPuddleSpawnChance() && obj.tag == "Bounce")
+        {
+            Puddle puddle = pillarModel.GetChild(0).gameObject.AddComponent(typeof(Puddle)) as Puddle;
+            if (Random.value <= Bioms.instance.GetPuddleBoostChance())
+            {
+                puddle.SetPuddleType(Puddle.PuddleTypes.BOOST);
+            }
+            else
+            {
+                puddle.SetPuddleType(Puddle.PuddleTypes.SLOW);
+            }
+        }
+
         return pillar;
     }
 
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-        float pillarsRingStep = Bioms.instance.GetPillarsRingStep();
+        float pillarsRingStep = Bioms.GetInstance().GetPillarsRingStep();
         for (int i = 1; i <= ring; i++)
         {
            UnityEditor.Handles.DrawWireDisc(center.position, center.up, pillarsRingStep * i);
@@ -205,10 +227,26 @@ public class ProceduralGeneration : MonoBehaviour
         float pillarsRingStep = Bioms.instance.GetPillarsRingStep();
         Vector2 pillarsFloorSize = Bioms.instance.GetPillarsFloorSize();
 
-        if (Vector2.Distance(ballPos, centerPos) + renderRadius >= pillarsRingStep * ring + (pillarsFloorSize.y / 2))
+        //if (Vector2.Distance(ballPos, centerPos) + renderRadius >= pillarsRingStep * ring + (pillarsFloorSize.y / 2))
+        //{
+        //    ring += 1;
+        //    ballRing += 1;
+        //    GenerateRing(ring);
+        //}
+
+        if (Vector2.Distance(ballPos, centerPos) >= ballDistance + oldPillarsRingStep)
+        {
+            ballDistance += oldPillarsRingStep;
+            ballRing += 1;
+            if (Bioms.instance.GetNewBiom())
+            {
+                oldPillarsRingStep = pillarsRingStep;
+            }
+            Debug.Log(ballRing);
+        }
+        if (Vector2.Distance(ballPos, centerPos) + renderRadius >= pillarsRingStep + fixedR)
         {
             ring += 1;
-            ballRing += 1;
             GenerateRing(ring);
         }
     }
