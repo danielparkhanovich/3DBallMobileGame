@@ -13,6 +13,7 @@ public class ProceduralGeneration : MonoBehaviour
     // Render parameters
     [Header("Renderer")]
     [SerializeField] private float renderRadius;
+    [SerializeField] private int renderRings;
     [SerializeField] private float renderFOV;
     [SerializeField] private bool cutFOV;
 
@@ -80,10 +81,6 @@ public class ProceduralGeneration : MonoBehaviour
         if (biomsON)
         {
             Bioms.instance.CheckNewBiom(ballRing);
-            if (renderRadius < Bioms.instance.GetPillarsRingStep()*Bioms.instance.GetCurrentBiom() + defaultRenderRadius)
-            {
-                //renderRadius += Bioms.instance.GetPillarsRingStep();
-            }
         }
 
         // pillars param init zone
@@ -98,8 +95,6 @@ public class ProceduralGeneration : MonoBehaviour
         Vector2 trampolineBodyHeight = Bioms.instance.GetTrampolineBodyHeight();
         Vector2 trampolineFloorSize = Bioms.instance.GetTrampolineFloorSize();
 
-        //float rPrev = pillarsRingStep * (ring - 1 - Bioms.instance.GetCurrentBiom()) + 10.0f;
-        //float r = pillarsRingStep * (ring - Bioms.instance.GetCurrentBiom());
         float rPrev = fixedR + 10.0f;
         fixedR += pillarsRingStep;
         float r = fixedR;
@@ -128,7 +123,6 @@ public class ProceduralGeneration : MonoBehaviour
         if (ring > 5 && cutFOV)
         {
             renderFOV /= (1.0f + 1.0f/(ring*pillarsRingStep*0.05f));
-            // Debug.Log(renderFOV);
         }
         float thetaMin = ballMoveAngle - renderFOV/2;
         float thetaMax = thetaMin + renderFOV;
@@ -251,16 +245,17 @@ public class ProceduralGeneration : MonoBehaviour
 
         float pillarsRingStep = Bioms.instance.GetPillarsRingStep();
         Vector2 pillarsFloorSize = Bioms.instance.GetPillarsFloorSize();
-        
+
+        renderRadius = renderRings * pillarsRingStep;
 
         if (Vector2.Distance(ballPos, centerPos) >= ballDistance + oldPillarsRingStep)
         {
-            ballDistance += oldPillarsRingStep;
-            ballRing += 1;
-            if (Bioms.instance.GetNewBiom())
+            if (ballRing % Bioms.instance.GetRingsToNextBioms() == 0)
             {
                 oldPillarsRingStep = pillarsRingStep;
             }
+            ballDistance += oldPillarsRingStep;
+            ballRing += 1;
             Debug.Log(ballRing);
         }
         if (Vector2.Distance(ballPos, centerPos) + renderRadius >= pillarsRingStep + fixedR)

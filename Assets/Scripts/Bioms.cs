@@ -115,6 +115,10 @@ public class Bioms : MonoBehaviour
     }
 
     // Get zone
+    public int GetRingsToNextBioms()
+    {
+        return ringsToNext;
+    }
     // Default pillars
     public float GetPillarsRingStep()
     {
