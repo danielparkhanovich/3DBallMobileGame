@@ -19,6 +19,7 @@ public class ProceduralGeneration : MonoBehaviour
     [Header("Pillars")]
     [SerializeField] private bool biomsON;
     [SerializeField] private GameObject pillarObj;
+    [SerializeField] private GameObject pillarTextObj;
     [SerializeField] private GameObject trampolineObj;
 
     private Bioms bioms;
@@ -195,12 +196,25 @@ public class ProceduralGeneration : MonoBehaviour
         if (Random.value <= Bioms.instance.GetPuddleSpawnChance() && obj.tag == "Bounce")
         {
             Puddle puddle = pillarModel.GetChild(0).gameObject.AddComponent(typeof(Puddle)) as Puddle;
+            
+            // Text
+            Vector3 textSpawnPosition = pillarModel.GetChild(0).position;
+            textSpawnPosition = new Vector3(textSpawnPosition.x, textSpawnPosition.y + 0.1f, textSpawnPosition.z);
+            GameObject textPuddle = Instantiate(pillarTextObj, textSpawnPosition, Quaternion.identity);
+            textPuddle.transform.parent = pillarModel.GetChild(0);
+
             if (Random.value <= Bioms.instance.GetPuddleBoostChance())
             {
+                // Text
+                textPuddle.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = (int)(Bioms.instance.GetPuddleBoostPower()*100) + "%";
+
                 puddle.SetPuddleType(Puddle.PuddleTypes.BOOST);
             }
             else
             {
+                // Text
+                textPuddle.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = (int)(Bioms.instance.GetPuddleSlowPower()*100) + "%";
+
                 puddle.SetPuddleType(Puddle.PuddleTypes.SLOW);
             }
         }
@@ -237,6 +251,7 @@ public class ProceduralGeneration : MonoBehaviour
 
         float pillarsRingStep = Bioms.instance.GetPillarsRingStep();
         Vector2 pillarsFloorSize = Bioms.instance.GetPillarsFloorSize();
+        
 
         if (Vector2.Distance(ballPos, centerPos) >= ballDistance + oldPillarsRingStep)
         {
