@@ -54,6 +54,12 @@ public class Bioms : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+
+            instance.diamondsProbabilities.Add(Diamond.DiamondTypes.COMMON, 0.744);
+            instance.diamondsProbabilities.Add(Diamond.DiamondTypes.RARE, 0.2);
+            instance.diamondsProbabilities.Add(Diamond.DiamondTypes.MYTHICAL, 0.05);
+            instance.diamondsProbabilities.Add(Diamond.DiamondTypes.DRAGON, 0.005);
+            instance.diamondsProbabilities.Add(Diamond.DiamondTypes.ONYKS, 0.001);
         }
         else if (instance == this)
         {
@@ -68,6 +74,7 @@ public class Bioms : MonoBehaviour
             instance = new Bioms();
 
             // Init probabilities dictionary
+            Debug.Log("Added");
             instance.diamondsProbabilities.Add(Diamond.DiamondTypes.COMMON, 0.699);
             instance.diamondsProbabilities.Add(Diamond.DiamondTypes.RARE, 0.2);
             instance.diamondsProbabilities.Add(Diamond.DiamondTypes.MYTHICAL, 0.05);

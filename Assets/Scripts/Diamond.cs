@@ -12,15 +12,47 @@ public class Diamond : MonoBehaviour
         DRAGON,   // Red color    - 5.000
         ONYKS     // Black color  - 50.000
     }
+    [SerializeField] private DiamondTypes currentType;
+    [SerializeField] private GameObject gatherParticleSystem;
+    private int points;
+
+    private void Awake()
+    {
+        switch (currentType)
+        {
+            case (DiamondTypes.COMMON):
+                points = 1;
+                break;
+            case (DiamondTypes.RARE):
+                points = 10;
+                break;
+            case (DiamondTypes.MYTHICAL):
+                points = 500;
+                break;
+            case (DiamondTypes.DRAGON):
+                points = 5000;
+                break;
+            case (DiamondTypes.ONYKS):
+                points = 50000;
+                break;
+        }
+    }
 
     public static GameObject SpawnDiamond(DiamondTypes currentUpperBound, GameObject[] models, Dictionary<DiamondTypes, double> diamondsProbabilities, Transform parent)
     {
         double randomValue = Random.value;
         DiamondTypes selectedType = DiamondTypes.COMMON;
+        Debug.Log(randomValue);
+        foreach (KeyValuePair<DiamondTypes, double> entry in diamondsProbabilities)
+        {
+            Debug.Log("test");
+            Debug.Log(entry.Key);
+        }
 
         foreach (KeyValuePair<DiamondTypes, double> entry in diamondsProbabilities)
         {
             DiamondTypes type = entry.Key;
+            Debug.Log(type);
             if (entry.Key != DiamondTypes.COMMON)
             {
                 if (randomValue <= entry.Value)
@@ -53,12 +85,23 @@ public class Diamond : MonoBehaviour
         }
         var spawnPosition = new Vector3(parent.position.x, parent.position.y + 2, parent.position.z);
         return Instantiate(models[model], spawnPosition, Quaternion.identity);
-
     }
 
-    private DiamondTypes currentType;
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            // UI
+            PlayerController pc = other.GetComponent<PlayerController>();
+            int newPoints = pc.IncreaseNumberOfDiamonds(points);
+            pc.GetTextDiamonds().GetComponent<TMPro.TextMeshProUGUI>().text = "Diamonds: " + newPoints;
 
-   
+            // Effect
+            Instantiate(gatherParticleSystem, transform.position, Quaternion.identity);
 
-  
+            Destroy(gameObject);
+        }
+    }
+
+
 }

@@ -208,7 +208,6 @@ public class ProceduralGeneration : MonoBehaviour
         // Diamonds
         if (Random.value <= Bioms.instance.GetDiamondsSpawnChance() && obj.tag == "Bounce")
         {
-            Debug.Log("SPAWN !!!");
             GameObject diamond = Diamond.SpawnDiamond(
                 Bioms.instance.GetDiamondsVariety(), 
                 Bioms.instance.GetDiamondsPrefabs(), 

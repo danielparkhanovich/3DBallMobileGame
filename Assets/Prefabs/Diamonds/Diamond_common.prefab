@@ -75,8 +75,9 @@ GameObject:
   - component: {fileID: 5324523748150486436}
   - component: {fileID: 4290754947920256569}
   - component: {fileID: 8666303965463442705}
+  - component: {fileID: 2479905101859457205}
   m_Layer: 0
-  m_Name: Diamond_earlyBioms
+  m_Name: Diamond_common
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -128,6 +129,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8c680f3ec255814fb314157f8260a2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentType: 0
+  gatherParticleSystem: {fileID: 9144209635645907212, guid: 1bd01303a17a2ca47b10cacea7e52cd1, type: 3}
+--- !u!135 &2479905101859457205
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4805150105656393502}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 4.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5035684992682520619
 GameObject:
   m_ObjectHideFlags: 0
@@ -139,6 +155,7 @@ GameObject:
   - component: {fileID: 9049179370531929793}
   - component: {fileID: 317632561881040991}
   - component: {fileID: 8173603183497057408}
+  - component: {fileID: 3888261987124059581}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -154,7 +171,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5035684992682520619}
   m_LocalRotation: {x: -0.27059805, y: -0.6532815, z: 0.27059805, w: 0.65328145}
-  m_LocalPosition: {x: 1.38, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.9999999, y: 1.9999999, z: 1.5}
   m_Children:
   - {fileID: 4644130379276036306}
@@ -210,3 +227,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!135 &3888261987124059581
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5035684992682520619}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 2.6
+  m_Center: {x: -0.19709174, y: 0.6128412, z: -0.21218744}

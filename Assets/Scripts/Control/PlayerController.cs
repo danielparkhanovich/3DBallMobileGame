@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
 
     //UI labels
     [SerializeField] private GameObject textRings;
+    [SerializeField] private GameObject textDiamonds;
 
     [SerializeField] private float speedOfRotate;
     [SerializeField] private float speedOfForwardMovement;
@@ -26,7 +27,7 @@ public class PlayerController : MonoBehaviour
     private IHandleInput handleInput;
     private Thrust thrust;
     private Rigidbody rb;
-
+    private int numberOfDiamonds = 0;
     private float currentRotateDirection = 0.0f;
     private bool bounce = false;
 
@@ -38,7 +39,7 @@ public class PlayerController : MonoBehaviour
             // Debug.Log("Bounce !");
             if (textRings)
             {
-                textRings.GetComponent<TMPro.TextMeshProUGUI>().text = "Rings: " + ProceduralGeneration.instance.GetBallRing();
+                textRings.GetComponent<TextMeshProUGUI>().text = "Rings: " + ProceduralGeneration.instance.GetBallRing();
             }
             Puddle puddle = collision.gameObject.GetComponent<Puddle>();
             if (puddle)
@@ -53,7 +54,7 @@ public class PlayerController : MonoBehaviour
             // Debug.Log("Trampoline !");
             if (textRings)
             {
-                textRings.GetComponent<TMPro.TextMeshProUGUI>().text = "Rings: " + ProceduralGeneration.instance.GetBallRing();
+                textRings.GetComponent<TextMeshProUGUI>().text = "Rings: " + ProceduralGeneration.instance.GetBallRing();
             }
             bounce = true;
         }
@@ -98,6 +99,17 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public int IncreaseNumberOfDiamonds(int value)
+    {
+        numberOfDiamonds += value;
+        return numberOfDiamonds;
+    }
+
+    public GameObject GetTextDiamonds()
+    {
+        return textDiamonds;
+    }
+
     public float GetSpeedOfForwardMovement()
     {
         return speedOfForwardMovement;
@@ -114,13 +126,13 @@ public class PlayerController : MonoBehaviour
         {
             speedOfForwardMovement = maxSpeed.x;
         }
-        else if (speedOfForwardMovement + value > minSpeed.x)
+        else if (speedOfForwardMovement + value < minSpeed.x)
         {
             speedOfForwardMovement = minSpeed.x;
         }
     }
 
-    public Vector3 getBallVelocity()
+    public Vector3 GetBallVelocity()
     {
         return rb.velocity;
     }
