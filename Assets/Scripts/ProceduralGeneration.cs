@@ -183,7 +183,10 @@ public class ProceduralGeneration : MonoBehaviour
         
         // Coloring
         Transform pillarModel = pillar.transform.GetChild(0);
-        pillarModel.GetChild(0).GetComponent<Renderer>().material.color = ringColor;
+        if (obj.tag == "Bounce")
+        {
+            pillarModel.GetChild(0).GetComponent<Renderer>().material.color = ringColor;
+        }
         pillarModel.localScale = new Vector3(s, h, s);
 
         // Puddle

@@ -17,6 +17,11 @@ public class Pillar : MonoBehaviour
         compareValue = ProceduralGeneration.instance.GetRing();
     }
 
+    public void Die()
+    {
+        Destroy(gameObject);
+    }
+
     private void FixedUpdate()
     {
         if (!ProceduralGeneration.instance.IsRender())

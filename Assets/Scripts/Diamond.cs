@@ -18,6 +18,7 @@ public class Diamond : MonoBehaviour
 
     private void Awake()
     {
+        Destroy(gameObject, 20f);
         switch (currentType)
         {
             case (DiamondTypes.COMMON):

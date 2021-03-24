@@ -13,7 +13,7 @@ public class Trampoline : MonoBehaviour
         ball.GetComponent<PlayerController>().IncreaseSpeedOfForwardMovement(boost.x);
         rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y + boost.y, rb.velocity.z);
         used = true;
-       // GetComponentInChildren<MeshDestroy>().DestroyMesh();
-        Destroy(gameObject);
+        // GetComponentInChildren<MeshDestroy>().DestroyMesh();
+        GetComponent<Animator>().SetTrigger("Disappear");
     }
 }

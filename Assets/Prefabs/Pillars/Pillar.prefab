@@ -73,6 +73,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 7127400545993180193}
     m_Modifications:
     - target: {fileID: 1039664451028954655, guid: ff53654d4b308a049aba6631505f2c8b, type: 3}
+      propertyPath: m_TagString
+      value: Obstacle
+      objectReference: {fileID: 0}
+    - target: {fileID: 1039664451028954655, guid: ff53654d4b308a049aba6631505f2c8b, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 64
       objectReference: {fileID: 0}
@@ -144,6 +148,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7005818029774530701, guid: ff53654d4b308a049aba6631505f2c8b, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 309022ff2051cda41b6b4e2ab83496e2, type: 2}
     m_RemovedComponents:
     - {fileID: 415222633, guid: ff53654d4b308a049aba6631505f2c8b, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: ff53654d4b308a049aba6631505f2c8b, type: 3}

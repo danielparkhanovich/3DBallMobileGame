@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e792811c0671034c8dbad66eb18798a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boost: {x: 3, y: 5}
+  boost: {x: 2, y: 3}
 --- !u!95 &-7268908943940080415
 Animator:
   serializedVersion: 3
@@ -140,7 +140,7 @@ GameObject:
   - component: {fileID: 6353181518514160599}
   m_Layer: 0
   m_Name: Body
-  m_TagString: Pillar
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -186,7 +186,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 309022ff2051cda41b6b4e2ab83496e2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -294,7 +294,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: bd90aa60cc9ffe846ba93111f3ad5dc4, type: 2}
+  - {fileID: 2100000, guid: 2fe0534634720e94790314a1b42d906e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -8,6 +8,7 @@ TagManager:
   - Surface
   - Pillar
   - Trampoline
+  - Obstacle
   layers:
   - Default
   - TransparentFX

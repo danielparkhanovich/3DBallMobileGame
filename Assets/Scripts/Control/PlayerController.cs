@@ -58,6 +58,11 @@ public class PlayerController : MonoBehaviour
             }
             bounce = true;
         }
+        else if (collision.gameObject.tag == "Obstacle")
+        {
+            // Lose
+            Destroy(gameObject);
+        }
     }
 
     void Start()
