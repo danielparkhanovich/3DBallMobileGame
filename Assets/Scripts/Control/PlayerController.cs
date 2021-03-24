@@ -14,13 +14,15 @@ public class PlayerController : MonoBehaviour
     }
     [SerializeField] private Platform curentSystemPlatform;
     [SerializeField] private HandleWindows handleWindows;
+    [SerializeField] private HandleAndroid handleAndroid;
 
     //UI labels
     [SerializeField] private GameObject textRings;
     [SerializeField] private GameObject textDiamonds;
 
-    [SerializeField] private float speedOfRotate;
     [SerializeField] private float speedOfForwardMovement;
+    [SerializeField] private float speedOfRotate;
+
     [SerializeField] private Vector2 maxSpeed;
     [SerializeField] private Vector2 minSpeed;
 
@@ -36,7 +38,6 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.tag == "Bounce")
         {
-            // Debug.Log("Bounce !");
             if (textRings)
             {
                 textRings.GetComponent<TextMeshProUGUI>().text = "Rings: " + ProceduralGeneration.instance.GetBallRing();
@@ -51,7 +52,7 @@ public class PlayerController : MonoBehaviour
         else if (collision.gameObject.tag == "Trampoline")
         {
             collision.gameObject.GetComponentInParent<Trampoline>().BumpBall(gameObject);
-            // Debug.Log("Trampoline !");
+
             if (textRings)
             {
                 textRings.GetComponent<TextMeshProUGUI>().text = "Rings: " + ProceduralGeneration.instance.GetBallRing();
@@ -76,6 +77,10 @@ public class PlayerController : MonoBehaviour
         {
             handleInput = handleWindows;
         }
+        else if (curentSystemPlatform == Platform.Android)
+        {
+            handleInput = handleAndroid;
+        }
     }
 
     void ManageInput()
@@ -96,7 +101,7 @@ public class PlayerController : MonoBehaviour
                 currentRotateDirection -= 2 * Mathf.PI;
             }
         }
-        else if (handleInput.IsThrust())
+        if (handleInput.IsThrust())
         {
             float force = thrust.ToThrust();
             //rb.AddRelativeForce(force);
