@@ -13,8 +13,6 @@ public class PlayerController : MonoBehaviour
         IOS
     }
     [SerializeField] private Platform curentSystemPlatform;
-    [SerializeField] private HandleWindows handleWindows;
-    [SerializeField] private HandleAndroid handleAndroid;
 
     //UI labels
     [SerializeField] private GameObject textRings;
@@ -68,18 +66,16 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        handleWindows = GetComponent<HandleWindows>();
-
         thrust = GetComponent<Thrust>();
+        rb = GetComponent<Rigidbody>();
 
         if (curentSystemPlatform == Platform.Windows)
         {
-            handleInput = handleWindows;
+            handleInput = new HandleWindows();
         }
         else if (curentSystemPlatform == Platform.Android)
         {
-            handleInput = handleAndroid;
+            handleInput = new HandleAndroid();
         }
     }
 

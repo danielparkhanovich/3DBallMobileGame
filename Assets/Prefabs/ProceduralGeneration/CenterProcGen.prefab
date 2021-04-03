@@ -47,10 +47,12 @@ MonoBehaviour:
   center: {fileID: 698509104843812556}
   ballTransform: {fileID: 0}
   renderRadius: 100
+  renderRings: 4
   renderFOV: 120
   cutFOV: 1
   biomsON: 1
   pillarObj: {fileID: 7127400545993180198, guid: be72d9a4113477c478039f6b271b9daf, type: 3}
+  pillarTextObj: {fileID: 6571573614757308532, guid: f6a150727c2731e4abeed31634121304, type: 3}
   trampolineObj: {fileID: 5636110088423677250, guid: 5cbf5a7e8c642b34492eb885dfd2ae9a, type: 3}
 --- !u!114 &1701278041
 MonoBehaviour:
@@ -64,29 +66,134 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 468636f270b8e6c4c827668056a61d38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfBioms: 2
+  numberOfBioms: 9
   ringsToNext: 10
   pillarsRingStep:
+  - 24
   - 25
+  - 26
+  - 28
+  - 28
   - 30
+  - 29
+  - 31
+  - 50
   "pillars\u0421loseness":
   - 0
-  - 0
   pillarsFrequency:
+  - 11
+  - 10
+  - 14
   - 12
-  - 9
+  - 13
+  - 15
+  - 12
+  - 16
+  - 11
   pillarsFloorSize:
-  - {x: 0.5, y: 1}
-  - {x: 0.4, y: 0.8}
+  - {x: 0.75, y: 1}
+  - {x: 0.75, y: 0.9}
+  - {x: 0.7, y: 0.85}
+  - {x: 0.7, y: 0.8}
+  - {x: 0.7, y: 0.75}
+  - {x: 0.65, y: 0.75}
+  - {x: 0.6, y: 0.7}
+  - {x: 0.5, y: 0.6}
+  - {x: 1, y: 1.2}
   pillarsBodyHeight:
   - {x: 0.7, y: 0.9}
-  - {x: 0.9, y: 1.2}
+  - {x: 0.9, y: 1.1}
+  - {x: 0.9, y: 1.1}
+  - {x: 1.1, y: 1.3}
+  - {x: 1.2, y: 1.5}
+  - {x: 1.4, y: 1.7}
+  - {x: 1.6, y: 2}
+  - {x: 1.8, y: 2.1}
+  - {x: 2, y: 2.5}
   trampolineSpawnChance:
   - 0.1
-  - 0.08
+  - 0.1
+  - 0.15
+  - 0.15
+  - 0.25
+  - 0.25
+  - 0.09
+  - 0.09
+  - 0.12
   trampolineFloorSize:
-  - {x: 0.5, y: 1}
-  - {x: 0.4, y: 0.8}
+  - {x: 0.7, y: 1}
+  - {x: 0.7, y: 1}
+  - {x: 0.7, y: 1}
+  - {x: 0.7, y: 1}
+  - {x: 0.7, y: 1}
+  - {x: 0.6, y: 0.9}
+  - {x: 0.6, y: 0.9}
+  - {x: 0.6, y: 0.9}
+  - {x: 0.6, y: 0.9}
   trampolineBodyHeight:
   - {x: 0.6, y: 0.7}
   - {x: 0.7, y: 0.8}
+  - {x: 0.7, y: 0.8}
+  - {x: 0.8, y: 1}
+  - {x: 1, y: 1.1}
+  - {x: 1.1, y: 1.2}
+  - {x: 1.1, y: 1.2}
+  - {x: 1.4, y: 1.5}
+  - {x: 1.6, y: 1.9}
+  puddleSpawnChance:
+  - 0.1
+  - 0.15
+  - 0.15
+  - 0.15
+  - 0.15
+  - 0.25
+  - 0.2
+  - 0.2
+  - 0.2
+  puddleBoostChance:
+  - 1
+  - 0.75
+  - 0.75
+  - 1
+  - 0
+  - 1
+  - 0.2
+  - 0.1
+  - 0.7
+  puddleBoostPower:
+  - 0.15
+  - 0.15
+  - 0.2
+  - 0.2
+  - 0.25
+  - 0.35
+  - 0.25
+  - 0.25
+  - 0.25
+  puddleSlowPower:
+  - 0.1
+  - 0.1
+  - 0.15
+  - 0.5
+  - 0.15
+  - 0.2
+  - 0.15
+  - 0.4
+  - 0.4
+  diamondsSpawnChance:
+  - 0.2
+  - 0.01
+  - 0.01
+  - 0.015
+  - 0.02
+  - 0.02
+  - 0.04
+  - 0.04
+  - 0.08
+  diamondsVariety: 000000000000000001000000010000000100000002000000020000000400000004000000
+  diamondsPrefabs:
+  - {fileID: 4805150105656393502, guid: 97f2a26ee128abb48a5bce355ca95857, type: 3}
+  - {fileID: 4805150105656393502, guid: 3704b11ec890e944fad4bf9322a98158, type: 3}
+  - {fileID: 4805150105656393502, guid: 1d475c11b8ef9fc408c893edffda73c7, type: 3}
+  - {fileID: 4805150105656393502, guid: 2fe5faa059736f54da2790073b975e75, type: 3}
+  - {fileID: 4805150105656393502, guid: 34215e0c369ef8b47937bca6830397ca, type: 3}

@@ -43,17 +43,10 @@ public class Diamond : MonoBehaviour
     {
         double randomValue = Random.value;
         DiamondTypes selectedType = DiamondTypes.COMMON;
-        Debug.Log(randomValue);
-        foreach (KeyValuePair<DiamondTypes, double> entry in diamondsProbabilities)
-        {
-            Debug.Log("test");
-            Debug.Log(entry.Key);
-        }
 
         foreach (KeyValuePair<DiamondTypes, double> entry in diamondsProbabilities)
         {
             DiamondTypes type = entry.Key;
-            Debug.Log(type);
             if (entry.Key != DiamondTypes.COMMON)
             {
                 if (randomValue <= entry.Value)
@@ -66,7 +59,6 @@ public class Diamond : MonoBehaviour
                 break;
             };
         }
-        Debug.Log(selectedType);
 
         int model = 0;
         switch (selectedType)

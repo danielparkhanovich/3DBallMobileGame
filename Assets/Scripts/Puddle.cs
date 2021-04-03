@@ -38,11 +38,11 @@ public class Puddle : MonoBehaviour
         switch (currentType)
         {
             case PuddleTypes.BOOST:
-                value *= Bioms.instance.GetPuddleBoostPower();
+                value *= Bioms.instance.GetCurrentBiomData().PuddleBoostPower;
                 pc.IncreaseSpeedOfForwardMovement(value);
                 break;
             case PuddleTypes.SLOW:
-                value *= Bioms.instance.GetPuddleSlowPower() * -1;
+                value *= Bioms.instance.GetCurrentBiomData().PuddleSlowPower * -1;
                 pc.IncreaseSpeedOfForwardMovement(value);
                 break;
         }
