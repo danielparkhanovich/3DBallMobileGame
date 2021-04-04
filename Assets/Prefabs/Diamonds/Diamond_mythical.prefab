@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentType: 2
-  gatherParticleSystem: {fileID: 9144209635645907212, guid: 1bd01303a17a2ca47b10cacea7e52cd1, type: 3}
+  gatherParticleSystem: {fileID: 9144209635645907212, guid: f41a67af43397ce47b54d68476604357, type: 3}
 --- !u!135 &5360036075782030798
 SphereCollider:
   m_ObjectHideFlags: 0

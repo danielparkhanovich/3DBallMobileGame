@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e86586431c1311449aaf233ce644d2ca, type: 3}
+  m_Name: Biom4
+  m_EditorClassIdentifier: 
+  ringStep: 28
+  pillarsFrequency: 10
+  pillarsFloorSizeRange: {x: 0.8, y: 1.3}
+  pillarsBodyHeightRange: {x: 1.1, y: 1.35}
+  pillarsFloorColor: {r: 0.99215686, g: 0.8992512, b: 0.50980395, a: 0}
+  pillarsBodyColor: {r: 0.20754719, g: 0.20754719, b: 0.20754719, a: 0}
+  puddleSpawnChance: 0.05
+  puddleBoostChance: 0.6
+  puddleBoostPower: 0.1
+  puddleSlowPower: 0.15
+  trampolineSpawnChance: 0.05
+  trampolineFloorSizeRange: {x: 1, y: 1.1}
+  trampolineBodyHeightRange: {x: 1, y: 1.15}
+  diamondsSpawnChance: 0.15
+  diamondsVariety: 1

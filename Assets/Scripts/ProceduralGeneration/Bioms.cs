@@ -12,10 +12,6 @@ public class Bioms : MonoBehaviour
     // Bioms
     [Header("Bioms")]
     [SerializeField] private int ringsToNext = 25; // default 25
-
-    
-    // From the selected diamond type and below
-    [SerializeField] private Diamond.DiamondTypes[] diamondsVariety = new Diamond.DiamondTypes[] { };
     [SerializeField] private GameObject[] diamondsPrefabs;
     private Dictionary<Diamond.DiamondTypes, double> diamondsProbabilities = new Dictionary<Diamond.DiamondTypes, double>();
 

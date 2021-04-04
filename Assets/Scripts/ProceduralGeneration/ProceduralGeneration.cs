@@ -240,6 +240,7 @@ public class ProceduralGeneration : MonoBehaviour
         return pillar;
     }
 
+    #if UNITY_EDITOR
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
@@ -249,6 +250,7 @@ public class ProceduralGeneration : MonoBehaviour
            UnityEditor.Handles.DrawWireDisc(center.position, center.up, pillarsRingStep * i);
         }
     }
+    #endif
 
     void Update()
     {

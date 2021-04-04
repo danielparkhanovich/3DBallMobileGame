@@ -10,6 +10,8 @@ public class Thrust : MonoBehaviour
     [SerializeField] private float thrustReloadDelay;
     [SerializeField] private float thrustReloadSpeed;
     [SerializeField] private float thrustForce; // recommended ~0.1
+    [SerializeField] private bool affectOnCameraZoom;
+
     private float currentThrustReserve;
     private float currentThrustDelay;
     private float elapsedDelay;

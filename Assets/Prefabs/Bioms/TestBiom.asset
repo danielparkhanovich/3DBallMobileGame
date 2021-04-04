@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e86586431c1311449aaf233ce644d2ca, type: 3}
-  m_Name: Biom1
+  m_Name: TestBiom
   m_EditorClassIdentifier: 
-  ringStep: 23
-  pillarsFrequency: 9
-  pillarsFloorSizeRange: {x: 1, y: 1.4}
-  pillarsBodyHeightRange: {x: 0.8, y: 1}
-  pillarsFloorColor: {r: 1, g: 1, b: 1, a: 0}
+  ringStep: 22
+  pillarsFrequency: 7
+  pillarsFloorSizeRange: {x: 1.4, y: 1.5}
+  pillarsBodyHeightRange: {x: 0.95, y: 1}
+  pillarsFloorColor: {r: 0.38592023, g: 0.6886792, b: 0.44555458, a: 0}
   pillarsBodyColor: {r: 0, g: 0, b: 0, a: 0}
   puddleSpawnChance: 0
   puddleBoostChance: 0
   puddleBoostPower: 0
   puddleSlowPower: 0
   trampolineSpawnChance: 0.05
-  trampolineFloorSizeRange: {x: 1, y: 1.4}
-  trampolineBodyHeightRange: {x: 0.6, y: 0.8}
-  diamondsSpawnChance: 0
-  diamondsVariety: 0
+  trampolineFloorSizeRange: {x: 1, y: 1.1}
+  trampolineBodyHeightRange: {x: 0.95, y: 1}
+  diamondsSpawnChance: 0.5
+  diamondsVariety: 4

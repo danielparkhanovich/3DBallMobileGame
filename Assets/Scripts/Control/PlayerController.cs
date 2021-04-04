@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
     private int numberOfDiamonds = 0;
     private float currentRotateDirection = 0.0f;
     private bool bounce = false;
-
+    private bool thrusting = false;
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -99,9 +99,19 @@ public class PlayerController : MonoBehaviour
         }
         if (handleInput.IsThrust())
         {
+            //float force = thrust.ToThrust();
+            thrusting = true;
+            //transform.Translate(Vector3.forward * force);
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (thrusting)
+        {
             float force = thrust.ToThrust();
-            //rb.AddRelativeForce(force);
             transform.Translate(Vector3.forward * force);
+            thrusting = false;
         }
     }
 

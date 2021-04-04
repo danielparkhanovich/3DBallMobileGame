@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4644130379276036306
 Transform:
   m_ObjectHideFlags: 0
@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentType: 1
-  gatherParticleSystem: {fileID: 9144209635645907212, guid: 1bd01303a17a2ca47b10cacea7e52cd1, type: 3}
+  gatherParticleSystem: {fileID: 9144209635645907212, guid: 2258ad8ac1637554489c84acd0975562, type: 3}
 --- !u!135 &5360036075782030798
 SphereCollider:
   m_ObjectHideFlags: 0

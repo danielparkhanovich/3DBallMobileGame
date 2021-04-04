@@ -5,11 +5,8 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     [SerializeField] private GameObject target;
-
     [SerializeField] private Vector2 cameraZoomForce;
-
     private Vector3 defaultPosition;
-    // private Vector3 defaultVelocity;
 
     private void Start()
     {
