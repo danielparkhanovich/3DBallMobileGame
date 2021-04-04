@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -14,7 +15,6 @@ public class GameController : MonoBehaviour
             if (instance == null)
             {
                 instance = new GameController();
-                DontDestroyOnLoad(instance);
             }
 
             return instance;
@@ -22,18 +22,42 @@ public class GameController : MonoBehaviour
     }
     private GameStateType state;
     [SerializeField] private UnityEvent StartGameEvent;
+    [SerializeField] private UnityEvent PauseEvent;
+    [SerializeField] private UnityEvent UnpauseEvent;
     [SerializeField] private UnityEvent EndGameEvent;
 
+
+    private void Start()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance)
+        {
+            Destroy(gameObject);
+        }
+        PauseGame();
+    }
     private GameController()
     {
         state = GameStateType.DEFAULT;
     }
 
-    public void SetState(GameStateType newState, UnityEvent ev = null)
+    public void PauseGame()
     {
-        state.OnStateExit(ev);
+        SetState(GameStateType.PAUSE, enterEvent: PauseEvent);
+    }
+    public void UnpauseGame()
+    {
+        SetState(GameStateType.PLAY, exitEvent: UnpauseEvent);
+    }
+
+    public void SetState(GameStateType newState, UnityEvent enterEvent = null, UnityEvent exitEvent = null)
+    {
+        state.OnStateExit(exitEvent);
         state = newState;
-        state.OnStateEnter(ev);
+        state.OnStateEnter(enterEvent);
     }
     public GameStateType GetState()
     {
@@ -45,13 +69,14 @@ public class GameController : MonoBehaviour
         switch (state)
         {
             case GameStateType.DEFAULT:
-                SetState(GameStateType.PLAY, StartGameEvent);
+                SetState(GameStateType.MENU);
                 break;
             case GameStateType.MENU:
-                break;
-            case GameStateType.PAUSE:
+                // Waiting until user click play
                 break;
             case GameStateType.PLAY:
+                break;
+            case GameStateType.PAUSE:
                 break;
         }
     }

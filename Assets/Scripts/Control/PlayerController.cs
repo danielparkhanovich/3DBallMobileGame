@@ -13,14 +13,11 @@ public class PlayerController : MonoBehaviour
         IOS
     }
     [SerializeField] private Platform curentSystemPlatform;
-
     //UI labels
     [SerializeField] private GameObject textRings;
     [SerializeField] private GameObject textDiamonds;
-
     [SerializeField] private float speedOfForwardMovement;
     [SerializeField] private float speedOfRotate;
-
     [SerializeField] private Vector2 maxSpeed;
     [SerializeField] private Vector2 minSpeed;
 
@@ -60,7 +57,8 @@ public class PlayerController : MonoBehaviour
         else if (collision.gameObject.tag == "Obstacle")
         {
             // Lose
-            Destroy(gameObject);
+            //Destroy(gameObject);
+            SceneController.Instance.GoPlay();
         }
     }
 

@@ -1,6 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public enum GameStateType
 {
@@ -14,8 +17,13 @@ static class GameStateExtensions
 {
     public static void OnStateEnter(this GameStateType state, UnityEvent ev = null)
     {
-        // Call event
-        ev.Invoke();
+        // Try call event
+        try
+        {
+            ev.Invoke();
+        }
+        catch (NullReferenceException e) { }
+
         switch (state)
         {
             case GameStateType.DEFAULT:
@@ -23,6 +31,7 @@ static class GameStateExtensions
             case GameStateType.MENU: 
                 break;
             case GameStateType.PAUSE:
+                Time.timeScale = 0.0f;
                 break;
             case GameStateType.PLAY:
                 break;
@@ -32,7 +41,12 @@ static class GameStateExtensions
     }
     public static void OnStateExit(this GameStateType state, UnityEvent ev = null)
     {
-        ev.Invoke();
+        try
+        {
+            ev.Invoke();
+        }
+        catch (NullReferenceException e) { }
+
         switch (state)
         {
             case GameStateType.DEFAULT:
@@ -40,6 +54,7 @@ static class GameStateExtensions
             case GameStateType.MENU:
                 break;
             case GameStateType.PAUSE:
+                Time.timeScale = 1.0f;
                 break;
             case GameStateType.PLAY:
                 break;
