@@ -6,10 +6,9 @@ using UnityEngine;
    A - rotate to left 
    D - rotate to right
    W - thrust
-
  */
 
-public class HandleWindows : MonoBehaviour, IHandleInput
+public class HandleWindows : IHandleInput
 {
     public bool IsLeft()
     {
@@ -50,5 +49,10 @@ public class HandleWindows : MonoBehaviour, IHandleInput
     public float GetSingleAngleRotate()
     {
         return 0.5f;
+    }
+
+    public void ShowDebugInfo()
+    {
+        
     }
 }

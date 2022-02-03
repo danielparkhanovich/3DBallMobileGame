@@ -8,4 +8,5 @@ public interface IHandleInput
     bool IsRight();
     bool IsThrust();
     float GetSingleAngleRotate();
+    void ShowDebugInfo();
 }

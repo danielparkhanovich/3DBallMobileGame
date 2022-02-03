@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HandleAndroid : MonoBehaviour, IHandleInput
+public class HandleMobile : IHandleInput
 {
     public bool IsLeft()
     {
@@ -30,10 +30,8 @@ public class HandleAndroid : MonoBehaviour, IHandleInput
 
     public bool IsThrust()
     {
-        Debug.Log("OK");
         if (Input.touchCount > 0)
         {
-            Debug.Log("OK");
             return true;
         }
         else
@@ -41,14 +39,13 @@ public class HandleAndroid : MonoBehaviour, IHandleInput
             return false;
         }
     }
-   
-
+  
     public float GetSingleAngleRotate()
     {
         return 0.75f * Mathf.Abs(Input.acceleration.x);
     }
 
-    private void Update()
+    public void ShowDebugInfo()
     {
         Debug.Log(Input.acceleration);
         Debug.Log(Input.touchCount);

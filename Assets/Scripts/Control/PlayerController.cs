@@ -6,28 +6,35 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    enum Platform
-    {
-        Windows,
-        Android,
-        IOS
-    }
-    [SerializeField] private Platform curentSystemPlatform;
-    //UI labels
-    [SerializeField] private GameObject textRings;
-    [SerializeField] private GameObject textDiamonds;
-    [SerializeField] private float speedOfForwardMovement;
-    [SerializeField] private float speedOfRotate;
-    [SerializeField] private Vector2 maxSpeed;
-    [SerializeField] private Vector2 minSpeed;
+    [Header("Components")]
+    [SerializeField]
+    private Thrust thrust;
+    [SerializeField]
+    private Rigidbody rb;
+
+    [Header("UI components")]
+    [SerializeField] 
+    private GameObject textRings;
+    [SerializeField] 
+    private GameObject textDiamonds;
+
+    [Header("Player settings")]
+    [SerializeField] 
+    private float speedOfForwardMovement;
+    [SerializeField] 
+    private float speedOfRotate;
+    [SerializeField] 
+    private Vector2 maxSpeed;
+    [SerializeField] 
+    private Vector2 minSpeed;
 
     private IHandleInput handleInput;
-    private Thrust thrust;
-    private Rigidbody rb;
-    private int numberOfDiamonds = 0;
-    private float currentRotateDirection = 0.0f;
-    private bool bounce = false;
-    private bool thrusting = false;
+    private int numberOfDiamonds;
+    private float currentRotateDirection;
+
+    private bool isThrusting;
+    public bool IsThrusting { set => isThrusting = value; }
+
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -42,7 +49,6 @@ public class PlayerController : MonoBehaviour
             {
                 puddle.AffectBall(gameObject);
             }
-            bounce = true;
         }
         else if (collision.gameObject.tag == "Trampoline")
         {
@@ -52,64 +58,12 @@ public class PlayerController : MonoBehaviour
             {
                 textRings.GetComponent<TextMeshProUGUI>().text = "Rings: " + ProceduralGeneration.instance.GetBallRing();
             }
-            bounce = true;
         }
         else if (collision.gameObject.tag == "Obstacle")
         {
             // Lose
             //Destroy(gameObject);
-            SceneController.Instance.GoPlay();
-        }
-    }
-
-    void Start()
-    {
-        thrust = GetComponent<Thrust>();
-        rb = GetComponent<Rigidbody>();
-
-        if (curentSystemPlatform == Platform.Windows)
-        {
-            handleInput = new HandleWindows();
-        }
-        else if (curentSystemPlatform == Platform.Android)
-        {
-            handleInput = new HandleAndroid();
-        }
-    }
-
-    void ManageInput()
-    {
-        if (handleInput.IsLeft())
-        {
-            currentRotateDirection -= speedOfRotate * Time.deltaTime * handleInput.GetSingleAngleRotate();
-            if (currentRotateDirection < 0)
-            {
-                currentRotateDirection += 2 * Mathf.PI;
-            }
-        }
-        else if (handleInput.IsRight())
-        {
-            currentRotateDirection += speedOfRotate * Time.deltaTime * handleInput.GetSingleAngleRotate();
-            if (currentRotateDirection > 2 * Mathf.PI)
-            {
-                currentRotateDirection -= 2 * Mathf.PI;
-            }
-        }
-        if (handleInput.IsThrust())
-        {
-            //float force = thrust.ToThrust();
-            thrusting = true;
-            //transform.Translate(Vector3.forward * force);
-        }
-    }
-
-    private void FixedUpdate()
-    {
-        if (thrusting)
-        {
-            float force = thrust.ToThrust();
-            transform.Translate(Vector3.forward * force);
-            thrusting = false;
+            SceneManager.Instance.StartGame();
         }
     }
 
@@ -151,17 +105,43 @@ public class PlayerController : MonoBehaviour
         return rb.velocity;
     }
 
-    void Update()
+
+    private void Update()
     {
-        ManageInput();
         transform.eulerAngles = new Vector3(0, currentRotateDirection * (180 / Mathf.PI), 0);
 
-        // Movement 
+        // Update movement 
         rb.velocity = new Vector3(
             transform.forward.x * speedOfForwardMovement,
             rb.velocity.y,
             transform.forward.z * speedOfForwardMovement);
+    }
 
-        bounce = false;
+    private void FixedUpdate()
+    {
+        if (isThrusting)
+        {
+            float force = thrust.ToThrust();
+            transform.Translate(Vector3.forward * force);
+            isThrusting = false;
+        }
+    }
+
+    public void TurnTickLeft(float singleAngleRotate)
+    {
+        currentRotateDirection -= speedOfRotate * Time.deltaTime * singleAngleRotate;
+        if (currentRotateDirection < 0f)
+        {
+            currentRotateDirection += 2f * Mathf.PI;
+        }
+    }
+
+    public void TurnTickRight(float singleAngleRotate)
+    {
+        currentRotateDirection += speedOfRotate * Time.deltaTime * singleAngleRotate;
+        if (currentRotateDirection > 2f * Mathf.PI)
+        {
+            currentRotateDirection -= 2f * Mathf.PI;
+        }
     }
 }

@@ -44,10 +44,11 @@ GameObject:
   - component: {fileID: 4414530353748674959}
   - component: {fileID: 4414530353748674944}
   - component: {fileID: 4414530353748674945}
+  - component: {fileID: 6397989866656688827}
   - component: {fileID: 3226353059197662549}
   - component: {fileID: 4414530353535819034}
   m_Layer: 0
-  m_Name: BallPortrait
+  m_Name: BallOk
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -60,7 +61,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4414530353748674946}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 30.9, z: -13.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -147,6 +148,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &6397989866656688827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4414530353748674946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36fa98562df3116419069139e5e88ccd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curentSystemPlatform: 0
+  playerController: {fileID: 3226353059197662549}
 --- !u!114 &3226353059197662549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,7 +174,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c0586119139a7c4899d9ccb6a4b8ce7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curentSystemPlatform: 0
+  thrust: {fileID: 4414530353535819034}
+  rb: {fileID: 4414530353748674945}
   textRings: {fileID: 0}
   textDiamonds: {fileID: 0}
   speedOfForwardMovement: 10
@@ -364,6 +380,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4414530353748674957}
     m_Modifications:
+    - target: {fileID: 201234200863545455, guid: 41b6bc1f15f829445859272eae7b3a8a, type: 3}
+      propertyPath: target
+      value: 
+      objectReference: {fileID: 4414530353748674946}
     - target: {fileID: 6070155174699763953, guid: 41b6bc1f15f829445859272eae7b3a8a, type: 3}
       propertyPath: m_Name
       value: MainCamera
@@ -378,11 +398,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6070155174699763956, guid: 41b6bc1f15f829445859272eae7b3a8a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.5
+      value: 1.94
       objectReference: {fileID: 0}
     - target: {fileID: 6070155174699763956, guid: 41b6bc1f15f829445859272eae7b3a8a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4.5
+      value: -2.98
       objectReference: {fileID: 0}
     - target: {fileID: 6070155174699763956, guid: 41b6bc1f15f829445859272eae7b3a8a, type: 3}
       propertyPath: m_LocalRotation.w
@@ -410,6 +430,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6070155174699763956, guid: 41b6bc1f15f829445859272eae7b3a8a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6070155174699763957, guid: 41b6bc1f15f829445859272eae7b3a8a, type: 3}
+      propertyPath: m_RenderPostProcessing
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
