@@ -75,12 +75,6 @@ public class Bioms : MonoBehaviour
         }
     }
 
-    // if biom switched
-    public bool GetNewBiom()
-    {
-        return newBiom;
-    }
-
     public int GetCurrentBiomIndex()
     {
         return currentBiom;

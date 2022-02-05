@@ -26,6 +26,17 @@ public class BiomData : ScriptableObject
         protected set { }
     }
 
+    [SerializeField] private float ringStepNoise;
+    public float RingStepNoise
+    {
+        get
+        {
+            return ringStepNoise;
+        }
+        protected set { }
+    }
+
+
     [SerializeField] private Vector2 pillarsFloorSizeRange;
     public Vector2 PillarsFloorSizeRange
     {

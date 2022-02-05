@@ -13,8 +13,37 @@ public enum GameStateType
 
 public class GameController : MonoBehaviourSingleton<GameController>
 {
+    private PlayerController player;
+    public PlayerController Player
+    { 
+        get 
+        {
+            if (player == null)
+                player = PlayerController.Instance;
+
+            return player; 
+        } 
+    }
+
+    private DataManager dataManager;
+    public DataManager DataManager
+    {
+        get
+        {
+            if (dataManager == null)
+                dataManager = DataManager.Instance;
+
+            return dataManager;
+        }
+    }
+
+    [SerializeField]
+    private ObjectPooler pooler;
+    public ObjectPooler Pooler { get => pooler; }
+
     private GameStateType state;
     public GameStateType State { get => state; }
+
 
     [SerializeField] private UnityEvent StartGameEvent;
     [SerializeField] private UnityEvent PauseEvent;

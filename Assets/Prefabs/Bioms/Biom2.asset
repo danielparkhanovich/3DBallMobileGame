@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Biom2
   m_EditorClassIdentifier: 
   ringStep: 24
-  pillarsFrequency: 10
+  pillarsFrequency: 30
+  ringStepNoise: 7
   pillarsFloorSizeRange: {x: 0.9, y: 1.2}
   pillarsBodyHeightRange: {x: 0.9, y: 1.1}
   pillarsFloorColor: {r: 0.2584905, g: 1, b: 0.338491, a: 0}

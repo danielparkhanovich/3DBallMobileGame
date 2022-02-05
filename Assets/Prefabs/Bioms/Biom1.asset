@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e86586431c1311449aaf233ce644d2ca, type: 3}
   m_Name: Biom1
   m_EditorClassIdentifier: 
-  ringStep: 22
-  pillarsFrequency: 7
-  pillarsFloorSizeRange: {x: 1.4, y: 1.5}
+  ringStep: 19
+  pillarsFrequency: 50
+  ringStepNoise: 2
+  pillarsFloorSizeRange: {x: 1.5, y: 1.6}
   pillarsBodyHeightRange: {x: 0.95, y: 1}
   pillarsFloorColor: {r: 0.38592023, g: 0.6886792, b: 0.44555458, a: 0}
   pillarsBodyColor: {r: 0, g: 0, b: 0, a: 0}

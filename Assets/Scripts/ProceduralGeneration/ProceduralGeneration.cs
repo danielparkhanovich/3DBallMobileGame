@@ -1,176 +1,209 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EasyButtons;
+using UnityEngine.Events;
 
-public class ProceduralGeneration : MonoBehaviour
+public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
 {
-    public static ProceduralGeneration instance = null;
-
     [Header("Track")]
-    [SerializeField] private Transform center;
-    [SerializeField] private Transform ballTransform;
+    [SerializeField] 
+    private Transform originCenter;
 
-    // Render parameters
     [Header("Renderer")]
-    [SerializeField] private float renderRadius;
-    [SerializeField] private int renderRings;
-    [SerializeField] private float renderFOV;
-    [SerializeField] private bool cutFOV;
+    [SerializeField]
+    private ObjectPooler objectPooler;
+    public ObjectPooler ObjectPooler { get => objectPooler; }
+
+    [SerializeField] 
+    private int renderRings;
+    public int RenderRings { get => renderRings; }
+
+    [SerializeField]
+    private int ringsToDestroyOld;
+    public int RingsToDestroyOld { get => ringsToDestroyOld; }
+
+    [SerializeField]
+    private int renderRingNumberFactor;
+
+    [SerializeField] 
+    private float renderFOV;
 
     [Header("Pillars")]
-    [SerializeField] private bool biomsON;
-    [SerializeField] private GameObject pillarObj;
-    [SerializeField] private GameObject pillarTextObj;
-    [SerializeField] private GameObject trampolineObj;
+    [SerializeField] 
+    private GameObject pillarObj;
+    [SerializeField] 
+    private GameObject pillarTextObj;
+    [SerializeField] 
+    private GameObject trampolineObj;
 
-    private Bioms bioms;
-    private float defaultRenderRadius;
-    private int prerenderRings;
-    private bool prerendering;
-    private int ring = 1;
-    private int ballRing = 1;
-    private float fixedR = 0;
-    private float ballDistance = 0;
-    private float oldPillarsRingStep;
+    [Header("Bioms area")]
+    [SerializeField] 
+    private List<BiomData> bioms;
+    public List<BiomData> Bioms { get => bioms; }
+    
+    [SerializeField] 
+    private int ringsToNext = 25; // default 25
+    [SerializeField] 
+    private GameObject[] diamondsPrefabs;
+    private Dictionary<Diamond.DiamondTypes, double> diamondsProbabilities = new Dictionary<Diamond.DiamondTypes, double>();
 
-    void Start()
+    private BiomData currentBiom;
+    public BiomData CurrentBiom { get => currentBiom; set => currentBiom = value; }
+
+    private int generatedRings;
+    public int GeneratedRings { get => generatedRings; }
+    private float generatedRadius;
+
+    private int overlappedRings;
+
+    private Transform ballTransform;
+    public Transform BallTransform { get => ballTransform; set => ballTransform = value; }
+
+    public UnityEvent NewRingEvent = new UnityEvent();
+
+    private bool isPooling;
+    public bool IsPooling { get => isPooling; }
+
+
+    private void Start()
     {
-        // Singletone pattern
-        if (instance == null)
-        { 
-            instance = this; 
-        }
-        else if (instance == this)
-        { 
-            Destroy(gameObject); 
-        }
+        ballTransform = PlayerController.Instance.transform;
+        currentBiom = bioms[0];
 
-        // Prerender
-        prerendering = true;
-        ring = 1;
-        StartCoroutine(DelayedPrerender());
-    }
-    private IEnumerator DelayedPrerender()
-    {
-        yield return null;
-
-        float pillarsRingStep = Bioms.GetInstance().GetCurrentBiomData().RingStep;
-        oldPillarsRingStep = pillarsRingStep;
-        prerenderRings = Mathf.RoundToInt(renderRadius / pillarsRingStep);
-        defaultRenderRadius = renderRadius;
-
-        if (prerenderRings == 0)
-        {
-            prerenderRings = 1;
-        }
-        for (int i = 1; i <= prerenderRings; i++)
-        {
-            GenerateRing(ring);
-            ring++;
-        }
-        prerendering = false;
+        ResetRings();
+        PrerenderRings(true);
     }
 
-    public float GetRing()
+    public void PrerenderRings(bool isActivePooling)
     {
-        return ring;
+        this.isPooling = isActivePooling;
+
+        int totalPillars = renderRings * renderRingNumberFactor * Mathf.RoundToInt(renderFOV / currentBiom.PillarsFrequency);
+
+        objectPooler.AddObject(pillarObj, totalPillars, true);
+
+        for (int i = 1; i <= renderRings; i++)
+        {
+            GenerateRing(false);
+        }
     }
-    public float GetBallRing()
+
+    // Utility function for editor
+    public void ResetRings()
     {
-        return ballRing;
+        if (generatedRings == 0)
+            return;
+
+        overlappedRings = 0;
+        generatedRings = 0;
+        generatedRadius = 0;
+
+        // Clear pooled objects lists
+        for (int i = objectPooler.pooledObjects.Count - 1; i >= 0; i--)
+        {
+            DestroyImmediate(objectPooler.pooledObjects[i]);
+        }
+
+        objectPooler.itemsToPool = new List<ObjectPoolItem>();
+        objectPooler.pooledObjects = new List<GameObject>();
     }
 
-    private void GenerateRing(int ring)
+    private void FixedUpdate()
     {
-        // Bioms
-        if (biomsON)
+        // New ring
+        var resultVector = ballTransform.position - originCenter.transform.position;
+
+        if (resultVector.magnitude >= currentBiom.RingStep * (overlappedRings + 1))
         {
-            Bioms.instance.CheckNewBiom(ballRing);
+            OverlapRing(true);
+            NewRingEvent.Invoke();
+        }
+    }
+
+    public void CheckNewBiom(int ballRing)
+    {
+        int numberOfBioms = bioms.Count;
+        int currentBiomIndex = bioms.IndexOf(currentBiom);
+        if (Mathf.Floor(ballRing / ringsToNext) > currentBiomIndex && currentBiomIndex < numberOfBioms - 1)
+        {
+            currentBiomIndex += 1;
+            Debug.Log(currentBiom);
+        }
+    }
+
+    public void OverlapRing(bool isAnimate)
+    {
+        GenerateRing(isAnimate);
+        overlappedRings += 1;
+    }
+
+    private void GenerateRing(bool isAnimate)
+    {
+        generatedRings += 1;
+
+        int pillarsNumberFactor = renderRingNumberFactor;
+        float fixedRenderFov = renderFOV;
+
+        float noise = currentBiom.RingStepNoise;
+        generatedRadius += currentBiom.RingStep;
+
+        if (generatedRings < renderRingNumberFactor)
+        {
+            pillarsNumberFactor = generatedRings;
+        }
+        else if (generatedRings > renderRingNumberFactor)
+        {
+            fixedRenderFov *= currentBiom.RingStep * renderRingNumberFactor / generatedRadius;
         }
 
-        BiomData generationData = Bioms.instance.GetCurrentBiomData();
-        // pillars param init zone
-        float pillarsRingStep = generationData.RingStep;
-        float pillarsFrequency = generationData.PillarsFrequency;
-        Vector2 pillarsBodyHeight = generationData.PillarsBodyHeightRange;
-        Vector2 pillarsFloorSize = generationData.PillarsFloorSizeRange;
-        Color pillarsFloorColor = generationData.PillarsFloorColor;
-        Color pillarsBodyColor = generationData.PillarsBodyColor;
-        // trampoline param init zone
-        float trampolineSpawnChance = generationData.TrampolineSpawnChance;
-        Vector2 trampolineBodyHeight = generationData.TrampolineBodyHeightRange;
-        Vector2 trampolineFloorSize = generationData.TrampolineFloorSizeRange;
-
-        float rPrev = fixedR + 10.0f;
-        fixedR += pillarsRingStep;
-        float r = fixedR;
-
-        int numberOfPillars = 0;
-        if (ring == 1)
-        {
-            numberOfPillars = Mathf.RoundToInt(pillarsFrequency);
-        }
-        else
-        {
-            numberOfPillars = Mathf.RoundToInt(pillarsFrequency * r/pillarsRingStep);
-        }
-        float angleStep = 360.0f / numberOfPillars;
+        int numberOfPillars = pillarsNumberFactor * Mathf.RoundToInt(renderFOV / currentBiom.PillarsFrequency);
 
         Vector2 ballPos = new Vector2(ballTransform.position.x, ballTransform.position.z);
-        Vector2 centerPos = new Vector2(center.position.x, center.position.z);
-
-        float ballMoveAngle = Mathf.Atan2(ballPos.y - centerPos.y, ballPos.x - centerPos.x) * (180.0f / Mathf.PI);
+        float ballMoveAngle = Mathf.Atan2(ballPos.y - originCenter.transform.position.z, ballPos.x - originCenter.transform.position.x) * (180.0f / Mathf.PI);
         if (ballMoveAngle < 0.0f)
         {
             ballMoveAngle += 360.0f;
-        }
+        };
 
-        // Cut FOV
-        if (ring > 5 && cutFOV)
-        {
-            renderFOV /= (1.0f + 1.0f/(ring*pillarsRingStep*0.05f));
-        }
-        float thetaMin = ballMoveAngle - renderFOV/2;
-        float thetaMax = thetaMin + renderFOV;
+        float thetaMin = ballMoveAngle - fixedRenderFov / 2f;
+        float thetaMax = ballMoveAngle + fixedRenderFov / 2f;
+
+        #if UNITY_EDITOR
+            thetaMin = -ballTransform.rotation.eulerAngles.y - fixedRenderFov / 2f + 90f;
+            thetaMax = -ballTransform.rotation.eulerAngles.y + fixedRenderFov / 2f + 90f;
+        #endif
+
+        float angleStep = fixedRenderFov / numberOfPillars;
 
         // full circle thetaMin = 0; thetaMax = 360.0f
-        for (float theta = thetaMin; theta < thetaMax; theta += angleStep)
+        for (float theta = thetaMin; theta <= Mathf.Ceil(thetaMax); theta += angleStep)
         {
+            float rDist = Random.Range(generatedRadius, generatedRadius + noise);
+            float x = originCenter.transform.position.x + rDist * Mathf.Cos(theta * (Mathf.PI / 180.0f));
+            float z = originCenter.transform.position.z + rDist * Mathf.Sin(theta * (Mathf.PI / 180.0f));
 
-            float rDist = Random.Range(rPrev, r); //Mathf.Sqrt(Random.value)
-            float x = center.position.x + rDist * Mathf.Cos(theta * (Mathf.PI / 180.0f));
-            float z = center.position.z + rDist * Mathf.Sin(theta * (Mathf.PI / 180.0f));
+            //// Default pillar
+            //if (Random.value > currentBiom.TrampolineSpawnChance)
+            //{
+            //    bodyHeight = pillarsBodyHeight;
+            //    floorSize = pillarsFloorSize;
+            //    obj = pillarObj;
+            //}
+            //// Trampoline pillar
+            //else
+            //{
+            //    bodyHeight = trampolineBodyHeight;
+            //    floorSize = trampolineFloorSize;
+            //    obj = trampolineObj;
+            //}
 
+            float h = Random.Range(currentBiom.PillarsBodyHeightRange.x, currentBiom.PillarsBodyHeightRange.y);
+            float s = Random.Range(currentBiom.PillarsFloorSizeRange.x, currentBiom.PillarsFloorSizeRange.y);
 
-            Vector2 bodyHeight;
-            Vector2 floorSize;
-            GameObject obj;
-
-            // Default pillar
-            if (Random.value > trampolineSpawnChance)
-            {
-                bodyHeight = pillarsBodyHeight;
-                floorSize = pillarsFloorSize;
-                obj = pillarObj;
-            }
-            // Trampoline pillar
-            else
-            {
-                bodyHeight = trampolineBodyHeight;
-                floorSize = trampolineFloorSize;
-                obj = trampolineObj;
-            }
-            float h = Random.Range(bodyHeight.x, bodyHeight.y);
-            float s = Random.Range(floorSize.x, floorSize.y);
-
-            Color[] color = { pillarsFloorColor, pillarsBodyColor };
-            CreatePillar(x, z, s, h, color, obj, !prerendering, ring);
+            Color[] color = { currentBiom.PillarsFloorColor, currentBiom.PillarsBodyColor };
+            CreatePillar(x, z, s, h, color, pillarObj, isAnimate, generatedRings);
         }
-    }
-
-    public bool IsRender()
-    {
-        return prerendering;
     }
 
     private GameObject CreatePillar(float x, float z, float s, float h, Color[] ringColor, GameObject obj, bool isAnimate, int ring)
@@ -179,10 +212,25 @@ public class ProceduralGeneration : MonoBehaviour
         Color floorColor = ringColor[0];
         Color bodyColor = ringColor[1];
 
-        BiomData biomData = Bioms.instance.GetCurrentBiomData();
+        GameObject pillar = objectPooler.GetReadyToUsePoolObject(0, position, Quaternion.identity);
+        //pillar.transform.Rotate(0f, PlayerController.Instance.transform.rotation.eulerAngles.y, 0f);
 
-        GameObject pillar = Instantiate(obj, position, Quaternion.identity);
-        pillar.GetComponent<Pillar>().SetRing(ring);
+        Pillar pillarSc = pillar.GetComponent<Pillar>();
+
+        if (ring < renderRings)
+        {
+            pillarSc.InitValues(ringsToDestroyOld + (ring - 1));
+        }
+        else
+        {
+            pillarSc.InitValues(ringsToDestroyOld + renderRings);
+        }
+
+        if (isPooling)
+        {
+            NewRingEvent.RemoveListener(pillarSc.TryDisable);
+            NewRingEvent.AddListener(pillarSc.TryDisable);
+        }
 
         // Animations
         if (isAnimate)
@@ -194,13 +242,13 @@ public class ProceduralGeneration : MonoBehaviour
         Transform pillarModel = pillar.transform.GetChild(0);
         if (obj.tag == "Bounce")
         {
-            pillarModel.GetChild(0).GetComponent<Renderer>().material.color = floorColor;
-            pillarModel.GetChild(1).GetComponent<Renderer>().material.color = bodyColor;
+            pillarModel.GetChild(0).GetComponent<Renderer>().sharedMaterial.color = floorColor;
+            pillarModel.GetChild(1).GetComponent<Renderer>().sharedMaterial.color = bodyColor;
         }
         pillarModel.localScale = new Vector3(s, h, s);
 
         // Puddle
-        if (Random.value <= biomData.PuddleSpawnChance && obj.tag == "Bounce")
+        if (Random.value <= currentBiom.PuddleSpawnChance && obj.tag == "Bounce")
         {
             Puddle puddle = pillarModel.GetChild(0).gameObject.AddComponent(typeof(Puddle)) as Puddle;
             
@@ -210,32 +258,32 @@ public class ProceduralGeneration : MonoBehaviour
             GameObject textPuddle = Instantiate(pillarTextObj, textSpawnPosition, Quaternion.identity);
             textPuddle.transform.parent = pillarModel.GetChild(0);
 
-            if (Random.value <= biomData.PuddleBoostChance)
+            if (Random.value <= currentBiom.PuddleBoostChance)
             {
                 // Text
-                textPuddle.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = (int)(biomData.PuddleBoostPower*100) + "%";
+                textPuddle.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = (int)(currentBiom.PuddleBoostPower*100) + "%";
 
                 puddle.SetPuddleType(Puddle.PuddleTypes.BOOST);
             }
             else
             {
                 // Text
-                textPuddle.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = (int)(biomData.PuddleSlowPower*100) + "%";
+                textPuddle.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = (int)(currentBiom.PuddleSlowPower*100) + "%";
 
                 puddle.SetPuddleType(Puddle.PuddleTypes.SLOW);
             }
         }
 
         // Diamonds
-        if (Random.value <= biomData.DiamondsSpawnChance && obj.tag == "Bounce")
-        {
-            GameObject diamond = Diamond.SpawnDiamond(
-                biomData.DiamondsVariety, 
-                Bioms.instance.GetDiamondsPrefabs(), 
-                Bioms.instance.GetDiamondsProbabilities(), 
-                pillarModel.GetChild(0));
-            diamond.transform.parent = pillarModel;
-        }
+        //if (Random.value <= currentBiom.DiamondsSpawnChance && obj.tag == "Bounce")
+        //{
+        //    GameObject diamond = Diamond.SpawnDiamond(
+        //        currentBiom.DiamondsVariety, 
+        //        diamondsPrefabs, 
+        //        diamondsProbabilities, 
+        //        pillarModel.GetChild(0));
+        //    diamond.transform.parent = pillarModel;
+        //}
 
         return pillar;
     }
@@ -243,46 +291,39 @@ public class ProceduralGeneration : MonoBehaviour
     #if UNITY_EDITOR
     void OnDrawGizmosSelected()
     {
+        if (!currentBiom)
+            currentBiom = bioms[0];
+        if (!ballTransform)
+            ballTransform = PlayerController.Instance.transform;
+
         Gizmos.color = Color.yellow;
-        float pillarsRingStep = Bioms.GetInstance().GetCurrentBiomData().RingStep;
-        for (int i = 1; i <= ring; i++)
+        float pillarsRingStep = currentBiom.RingStep;
+        for (int i = 1; i <= generatedRings; i++)
         {
-           UnityEditor.Handles.DrawWireDisc(center.position, center.up, pillarsRingStep * i);
+            UnityEditor.Handles.color = Color.white;
+            UnityEditor.Handles.DrawWireDisc(originCenter.position, Vector3.up, pillarsRingStep * i);
+            UnityEditor.Handles.color = Color.cyan;
+            UnityEditor.Handles.DrawWireDisc(originCenter.position, Vector3.up, (pillarsRingStep * i) + currentBiom.RingStepNoise);
         }
+
+        // Draw FOV
+        float fov = renderFOV;
+
+        Gizmos.color = Color.yellow;
+        var left = Quaternion.AngleAxis(- fov / 2, Vector3.up) * ballTransform.forward;
+        Gizmos.DrawRay(new Vector3(originCenter.transform.position.x, transform.position.y, originCenter.transform.position.y), left * 100f);
+
+        Gizmos.color = Color.gray;
+        Gizmos.DrawRay(new Vector3(originCenter.transform.position.x, transform.position.y, originCenter.transform.position.y), ballTransform.forward * 100f);
+
+        Gizmos.color = Color.yellow;
+        var right = Quaternion.AngleAxis(fov / 2, Vector3.up) * ballTransform.forward;
+        Gizmos.DrawRay(new Vector3(originCenter.transform.position.x, transform.position.y, originCenter.transform.position.y), right * 100f);
+
+        Gizmos.color = Color.black;
+        Gizmos.DrawLine(originCenter.transform.position, ballTransform.position);
     }
     #endif
 
-    void Update()
-    {
-        Debug.Log($"Ballring: {ballRing}, current Ring: {ring}");
-        BiomData biomdata = Bioms.instance.GetCurrentBiomData();
-
-        if (!prerendering)
-        {
-
-            // new ring
-            Vector2 ballPos = new Vector2(ballTransform.position.x, ballTransform.position.z);
-            Vector2 centerPos = new Vector2(center.position.x, center.position.z);
-
-            float pillarsRingStep = biomdata.RingStep;
-            Vector2 pillarsFloorSize = biomdata.PillarsFloorSizeRange;
-
-            renderRadius = renderRings * pillarsRingStep;
-
-            if (Vector2.Distance(ballPos, centerPos) >= ballDistance + oldPillarsRingStep)
-            {
-                if (ballRing % Bioms.instance.GetRingsToNextBioms() == 0)
-                {
-                    oldPillarsRingStep = pillarsRingStep;
-                }
-                ballDistance += oldPillarsRingStep;
-                ballRing += 1;
-            }
-            if (Vector2.Distance(ballPos, centerPos) + renderRadius >= pillarsRingStep + fixedR)
-            {
-                ring += 1;
-                GenerateRing(ring);
-            }
-        }
-    }
+    
 }

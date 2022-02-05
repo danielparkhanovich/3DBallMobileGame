@@ -4,39 +4,21 @@ using UnityEngine;
 
 public class Pillar : MonoBehaviour
 {
-    [SerializeField] private float ringsToDestroy;
+    private int lifetime;
 
-    private float fixedRing = 0;
-    private float elapsedRings = 0;
-    private float compareValue;
-
-
-    public void SetRing(int ring)
+    public void InitValues(int lifetime)
     {
-        fixedRing = ring;
-        compareValue = ProceduralGeneration.instance.GetRing();
+        this.lifetime = lifetime;
     }
 
-    public void Die()
+    public void TryDisable()
     {
-        Destroy(gameObject);
-    }
+        Debug.Log("Disable : " + lifetime);
+        lifetime -= 1;
 
-    private void FixedUpdate()
-    {
-        if (!ProceduralGeneration.instance.IsRender())
+        if (lifetime <= 0)
         {
-            if (ProceduralGeneration.instance.GetBallRing() != compareValue)
-            {
-                compareValue = ProceduralGeneration.instance.GetBallRing();
-            }
-
-            bool farToBall = compareValue - fixedRing > ringsToDestroy;
-
-            if (farToBall)
-            {
-                Destroy(gameObject);
-            }
+            gameObject.SetActive(false);
         }
     }
 }

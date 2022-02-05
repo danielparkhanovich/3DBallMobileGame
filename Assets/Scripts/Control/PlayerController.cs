@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviourSingleton<PlayerController>
 {
     [Header("Components")]
     [SerializeField]
@@ -28,83 +28,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField] 
     private Vector2 minSpeed;
 
-    private IHandleInput handleInput;
-    private int numberOfDiamonds;
+    private int collectedDiamonds;
+    private int overlappedRings;
+
     private float currentRotateDirection;
 
     private bool isThrusting;
     public bool IsThrusting { set => isThrusting = value; }
 
 
-    private void OnCollisionEnter(Collision collision)
+    private void Start()
     {
-        if (collision.gameObject.tag == "Bounce")
-        {
-            if (textRings)
-            {
-                textRings.GetComponent<TextMeshProUGUI>().text = "Rings: " + ProceduralGeneration.instance.GetBallRing();
-            }
-            Puddle puddle = collision.gameObject.GetComponent<Puddle>();
-            if (puddle)
-            {
-                puddle.AffectBall(gameObject);
-            }
-        }
-        else if (collision.gameObject.tag == "Trampoline")
-        {
-            collision.gameObject.GetComponentInParent<Trampoline>().BumpBall(gameObject);
-
-            if (textRings)
-            {
-                textRings.GetComponent<TextMeshProUGUI>().text = "Rings: " + ProceduralGeneration.instance.GetBallRing();
-            }
-        }
-        else if (collision.gameObject.tag == "Obstacle")
-        {
-            // Lose
-            //Destroy(gameObject);
-            SceneManager.Instance.StartGame();
-        }
+        ProceduralGeneration.Instance.NewRingEvent.AddListener(IncreaseNumberOfRings);
     }
-
-    public int IncreaseNumberOfDiamonds(int value)
-    {
-        numberOfDiamonds += value;
-        return numberOfDiamonds;
-    }
-
-    public GameObject GetTextDiamonds()
-    {
-        return textDiamonds;
-    }
-
-    public float GetSpeedOfForwardMovement()
-    {
-        return speedOfForwardMovement;
-    }
-
-    public void IncreaseSpeedOfForwardMovement(float value)
-    {
-        if (speedOfForwardMovement + value < maxSpeed.x && 
-            speedOfForwardMovement + value > minSpeed.x)
-        {
-            speedOfForwardMovement += value;
-        }
-        else if (speedOfForwardMovement + value > maxSpeed.x)
-        {
-            speedOfForwardMovement = maxSpeed.x;
-        }
-        else if (speedOfForwardMovement + value < minSpeed.x)
-        {
-            speedOfForwardMovement = minSpeed.x;
-        }
-    }
-
-    public Vector3 GetBallVelocity()
-    {
-        return rb.velocity;
-    }
-
 
     private void Update()
     {
@@ -143,5 +79,77 @@ public class PlayerController : MonoBehaviour
         {
             currentRotateDirection -= 2f * Mathf.PI;
         }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Bounce")
+        {
+            Puddle puddle = collision.gameObject.GetComponent<Puddle>();
+            if (puddle)
+            {
+                puddle.AffectBall(gameObject);
+            }
+        }
+        else if (collision.gameObject.tag == "Trampoline")
+        {
+            collision.gameObject.GetComponentInParent<Trampoline>().BumpBall(gameObject);
+
+            if (textRings)
+            {
+                // Need observer instead of ProceduralGeneration.instance
+                // textRings.GetComponent<TextMeshProUGUI>().text = "Rings: " + ProceduralGeneration.instance.GetBallRing(); textRings.GetComponent<TextMeshProUGUI>().text = "Rings: " + ProceduralGeneration.instance.GetBallRing();
+            }
+        }
+        else if (collision.gameObject.tag == "Obstacle")
+        {
+            // Lose
+            //Destroy(gameObject);
+            SceneManager.Instance.StartGame();
+        }
+    }
+
+    public int IncreaseNumberOfDiamonds(int value)
+    {
+        collectedDiamonds += value;
+        return collectedDiamonds;
+    }
+
+    private void IncreaseNumberOfRings()
+    {
+        overlappedRings += 1;
+        textRings.GetComponent<TextMeshProUGUI>().text = "Rings: " + overlappedRings;
+    } 
+
+    public GameObject GetTextDiamonds()
+    {
+        return textDiamonds;
+    }
+
+    public float GetSpeedOfForwardMovement()
+    {
+        return speedOfForwardMovement;
+    }
+
+    public void IncreaseSpeedOfForwardMovement(float value)
+    {
+        if (speedOfForwardMovement + value < maxSpeed.x && 
+            speedOfForwardMovement + value > minSpeed.x)
+        {
+            speedOfForwardMovement += value;
+        }
+        else if (speedOfForwardMovement + value > maxSpeed.x)
+        {
+            speedOfForwardMovement = maxSpeed.x;
+        }
+        else if (speedOfForwardMovement + value < minSpeed.x)
+        {
+            speedOfForwardMovement = minSpeed.x;
+        }
+    }
+
+    public Vector3 GetBallVelocity()
+    {
+        return rb.velocity;
     }
 }
