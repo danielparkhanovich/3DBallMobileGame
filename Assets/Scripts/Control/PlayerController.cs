@@ -83,25 +83,19 @@ public class PlayerController : MonoBehaviourSingleton<PlayerController>
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Bounce")
-        {
-            Puddle puddle = collision.gameObject.GetComponent<Puddle>();
-            if (puddle)
-            {
-                puddle.AffectBall(gameObject);
-            }
-        }
-        else if (collision.gameObject.tag == "Trampoline")
-        {
-            collision.gameObject.GetComponentInParent<Trampoline>().BumpBall(gameObject);
+        Pillar pillar = collision.gameObject.GetComponentInParent<Pillar>();
 
-            if (textRings)
-            {
-                // Need observer instead of ProceduralGeneration.instance
-                // textRings.GetComponent<TextMeshProUGUI>().text = "Rings: " + ProceduralGeneration.instance.GetBallRing(); textRings.GetComponent<TextMeshProUGUI>().text = "Rings: " + ProceduralGeneration.instance.GetBallRing();
-            }
+        if (pillar.Puddle.enabled)
+        {
+            pillar.Puddle.AffectBall(gameObject);
         }
-        else if (collision.gameObject.tag == "Obstacle")
+
+        if (pillar.Trampoline.enabled)
+        {
+            pillar.Trampoline.BumpBall(gameObject);
+        }
+
+        if (collision.gameObject.tag == "Obstacle")
         {
             // Lose
             //Destroy(gameObject);

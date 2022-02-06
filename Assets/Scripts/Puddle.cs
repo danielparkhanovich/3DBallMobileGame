@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Puddle : MonoBehaviour
@@ -10,41 +11,31 @@ public class Puddle : MonoBehaviour
         SLOW
     }
     private PuddleTypes currentType;
+    public PuddleTypes CurrentType { get => currentType; set => currentType = value; }
 
-    public void SetPuddleType(PuddleTypes type)
-    {
-        currentType = type;
-        switch (currentType)
-        {
-            case PuddleTypes.BOOST:
-                // Green color
-                GetComponent<Renderer>().material.color = new Color(0, 255, 0);
-                break;
+    [SerializeField]
+    private GameObject boostPuddle;
+    public GameObject BoostPuddle { get => boostPuddle; }
 
-            case PuddleTypes.SLOW:
-                // Black color
-                GetComponent<Renderer>().material.color = new Color(0, 0, 0);
-                break;
-        }
-    }
+    [SerializeField]
+    private GameObject slowPuddle;
+    public GameObject SlowPuddle { get => slowPuddle; }
+
+    [SerializeField]
+    private TextMeshProUGUI puddleText;
+    public TextMeshProUGUI PuddleText { get => puddleText; }
+
+    private float boostPower;
+    public float BoostPower { set { boostPower = value; } }
+
 
     public void AffectBall(GameObject ball)
     {
         Rigidbody rb = ball.GetComponent<Rigidbody>();
-        PlayerController pc = ball.GetComponent<PlayerController>();
+        PlayerController pc = PlayerController.Instance;
 
         float value = pc.GetSpeedOfForwardMovement();
-
-        switch (currentType)
-        {
-            case PuddleTypes.BOOST:
-                value *= Bioms.instance.GetCurrentBiomData().PuddleBoostPower;
-                pc.IncreaseSpeedOfForwardMovement(value);
-                break;
-            case PuddleTypes.SLOW:
-                value *= Bioms.instance.GetCurrentBiomData().PuddleSlowPower * -1;
-                pc.IncreaseSpeedOfForwardMovement(value);
-                break;
-        }
+        value *= boostPower;
+        pc.IncreaseSpeedOfForwardMovement(value);
     }
 }

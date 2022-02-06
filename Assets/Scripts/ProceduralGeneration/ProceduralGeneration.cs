@@ -31,9 +31,11 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
 
     [Header("Pillars")]
     [SerializeField] 
-    private GameObject pillarObj;
+    private GameObject pillarPrefab;
+
     [SerializeField] 
     private GameObject pillarTextObj;
+
     [SerializeField] 
     private GameObject trampolineObj;
 
@@ -44,6 +46,7 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
     
     [SerializeField] 
     private int ringsToNext = 25; // default 25
+
     [SerializeField] 
     private GameObject[] diamondsPrefabs;
     private Dictionary<Diamond.DiamondTypes, double> diamondsProbabilities = new Dictionary<Diamond.DiamondTypes, double>();
@@ -65,9 +68,14 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
     private bool isPooling;
     public bool IsPooling { get => isPooling; }
 
+    private bool isEditorUsing;
+    public bool IsEditorUsing { set => isEditorUsing = value; }
+
 
     private void Start()
     {
+        isEditorUsing = false;
+
         ballTransform = PlayerController.Instance.transform;
         currentBiom = bioms[0];
 
@@ -81,7 +89,7 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
 
         int totalPillars = renderRings * renderRingNumberFactor * Mathf.RoundToInt(renderFOV / currentBiom.PillarsFrequency);
 
-        objectPooler.AddObject(pillarObj, totalPillars, true);
+        objectPooler.AddObject(pillarPrefab, totalPillars, true);
 
         for (int i = 1; i <= renderRings; i++)
         {
@@ -169,10 +177,11 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
         float thetaMin = ballMoveAngle - fixedRenderFov / 2f;
         float thetaMax = ballMoveAngle + fixedRenderFov / 2f;
 
-        #if UNITY_EDITOR
+        if (isEditorUsing || generatedRings <= renderRings + 1)
+        {
             thetaMin = -ballTransform.rotation.eulerAngles.y - fixedRenderFov / 2f + 90f;
             thetaMax = -ballTransform.rotation.eulerAngles.y + fixedRenderFov / 2f + 90f;
-        #endif
+        }
 
         float angleStep = fixedRenderFov / numberOfPillars;
 
@@ -183,96 +192,39 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
             float x = originCenter.transform.position.x + rDist * Mathf.Cos(theta * (Mathf.PI / 180.0f));
             float z = originCenter.transform.position.z + rDist * Mathf.Sin(theta * (Mathf.PI / 180.0f));
 
-            //// Default pillar
-            //if (Random.value > currentBiom.TrampolineSpawnChance)
-            //{
-            //    bodyHeight = pillarsBodyHeight;
-            //    floorSize = pillarsFloorSize;
-            //    obj = pillarObj;
-            //}
-            //// Trampoline pillar
-            //else
-            //{
-            //    bodyHeight = trampolineBodyHeight;
-            //    floorSize = trampolineFloorSize;
-            //    obj = trampolineObj;
-            //}
+            Vector3 position = new Vector3(x, transform.position.y, z);
+            GameObject pillarObj = objectPooler.GetReadyToUsePoolObject(0, position, Quaternion.identity);
 
-            float h = Random.Range(currentBiom.PillarsBodyHeightRange.x, currentBiom.PillarsBodyHeightRange.y);
-            float s = Random.Range(currentBiom.PillarsFloorSizeRange.x, currentBiom.PillarsFloorSizeRange.y);
+            PillarTransformator.ReshapePillar(pillarObj, currentBiom);
 
-            Color[] color = { currentBiom.PillarsFloorColor, currentBiom.PillarsBodyColor };
-            CreatePillar(x, z, s, h, color, pillarObj, isAnimate, generatedRings);
-        }
-    }
+            // Set lifetime
+            Pillar pillar = pillarObj.GetComponent<Pillar>();
 
-    private GameObject CreatePillar(float x, float z, float s, float h, Color[] ringColor, GameObject obj, bool isAnimate, int ring)
-    {
-        Vector3 position = new Vector3(x, transform.position.y, z);
-        Color floorColor = ringColor[0];
-        Color bodyColor = ringColor[1];
-
-        GameObject pillar = objectPooler.GetReadyToUsePoolObject(0, position, Quaternion.identity);
-        //pillar.transform.Rotate(0f, PlayerController.Instance.transform.rotation.eulerAngles.y, 0f);
-
-        Pillar pillarSc = pillar.GetComponent<Pillar>();
-
-        if (ring < renderRings)
-        {
-            pillarSc.InitValues(ringsToDestroyOld + (ring - 1));
-        }
-        else
-        {
-            pillarSc.InitValues(ringsToDestroyOld + renderRings);
-        }
-
-        if (isPooling)
-        {
-            NewRingEvent.RemoveListener(pillarSc.TryDisable);
-            NewRingEvent.AddListener(pillarSc.TryDisable);
-        }
-
-        // Animations
-        if (isAnimate)
-        { 
-            pillar.GetComponent<Animator>().SetTrigger("Appear");
-        }
-        
-        // Coloring
-        Transform pillarModel = pillar.transform.GetChild(0);
-        if (obj.tag == "Bounce")
-        {
-            pillarModel.GetChild(0).GetComponent<Renderer>().sharedMaterial.color = floorColor;
-            pillarModel.GetChild(1).GetComponent<Renderer>().sharedMaterial.color = bodyColor;
-        }
-        pillarModel.localScale = new Vector3(s, h, s);
-
-        // Puddle
-        if (Random.value <= currentBiom.PuddleSpawnChance && obj.tag == "Bounce")
-        {
-            Puddle puddle = pillarModel.GetChild(0).gameObject.AddComponent(typeof(Puddle)) as Puddle;
-            
-            // Text
-            Vector3 textSpawnPosition = pillarModel.GetChild(0).position;
-            textSpawnPosition = new Vector3(textSpawnPosition.x, textSpawnPosition.y + 0.1f, textSpawnPosition.z);
-            GameObject textPuddle = Instantiate(pillarTextObj, textSpawnPosition, Quaternion.identity);
-            textPuddle.transform.parent = pillarModel.GetChild(0);
-
-            if (Random.value <= currentBiom.PuddleBoostChance)
+            if (generatedRings < renderRings)
             {
-                // Text
-                textPuddle.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = (int)(currentBiom.PuddleBoostPower*100) + "%";
-
-                puddle.SetPuddleType(Puddle.PuddleTypes.BOOST);
+                pillar.InitValues(ringsToDestroyOld + (generatedRings - 1));
             }
             else
             {
-                // Text
-                textPuddle.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = (int)(currentBiom.PuddleSlowPower*100) + "%";
+                pillar.InitValues(ringsToDestroyOld + renderRings);
+            }
 
-                puddle.SetPuddleType(Puddle.PuddleTypes.SLOW);
+            if (isPooling)
+            {
+                NewRingEvent.RemoveListener(pillar.TryDisable);
+                NewRingEvent.AddListener(pillar.TryDisable);
+            }
+
+            // Animations
+            if (isAnimate)
+            {
+                pillar.GetComponent<Animator>().SetTrigger("Appear");
             }
         }
+    }
+
+    private void CreatePillar(float x, float z, float s, float h, Color[] ringColor, bool isAnimate, int ring)
+    {
 
         // Diamonds
         //if (Random.value <= currentBiom.DiamondsSpawnChance && obj.tag == "Bounce")
@@ -284,8 +236,6 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
         //        pillarModel.GetChild(0));
         //    diamond.transform.parent = pillarModel;
         //}
-
-        return pillar;
     }
 
     #if UNITY_EDITOR

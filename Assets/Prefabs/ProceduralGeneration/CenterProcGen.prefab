@@ -47,8 +47,10 @@ MonoBehaviour:
   originCenter: {fileID: 698509104843812556}
   objectPooler: {fileID: 880734715}
   renderRings: 4
+  ringsToDestroyOld: 2
+  renderRingNumberFactor: 3
   renderFOV: 120
-  pillarObj: {fileID: 7127400545993180198, guid: be72d9a4113477c478039f6b271b9daf, type: 3}
+  pillarPrefab: {fileID: 0}
   pillarTextObj: {fileID: 6571573614757308532, guid: f6a150727c2731e4abeed31634121304, type: 3}
   trampolineObj: {fileID: 5636110088423677250, guid: 5cbf5a7e8c642b34492eb885dfd2ae9a, type: 3}
   bioms:

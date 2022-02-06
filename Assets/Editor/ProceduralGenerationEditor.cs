@@ -42,6 +42,8 @@ public class ProceduralGenerationEditor : Editor
         GUI.backgroundColor = new Color32(119, 198, 110, 255);
         if (GUILayout.Button("Next ring"))
         {
+            proc.IsEditorUsing = true;
+
             Random.InitState((int)Time.realtimeSinceStartup);
             if (proc.GeneratedRings == 0)
             {

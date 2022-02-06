@@ -4,8 +4,21 @@ using UnityEngine;
 
 public class Trampoline : MonoBehaviour
 {
-    [SerializeField] private Vector2 boost;
+    [SerializeField]
+    private Color floorColor;
+    public Color FloorColor { get => floorColor; }
+
+    [SerializeField]
+    private Color bodyColor;
+    public Color BodyColor { get => bodyColor; }
+
+
+    [SerializeField] 
+    private Vector2 boost;
+    public Vector2 Boost { set => boost = value; }
+
     private bool used = false;
+
 
     public void BumpBall(GameObject ball)
     {
@@ -13,7 +26,13 @@ public class Trampoline : MonoBehaviour
         ball.GetComponent<PlayerController>().IncreaseSpeedOfForwardMovement(boost.x);
         rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y + boost.y, rb.velocity.z);
         used = true;
-        // GetComponentInChildren<MeshDestroy>().DestroyMesh();
+
+        Debug.Log("Bumb");
         GetComponent<Animator>().SetTrigger("Disappear");
+    }
+
+    public void Die()
+    {
+        gameObject.SetActive(false);
     }
 }
