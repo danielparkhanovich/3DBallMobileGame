@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Diamond : MonoBehaviour
 {
+    public static UnityAction DiamondGathered;
+
     public enum DiamondTypes
     {
         COMMON,   // White color  - 1
@@ -88,6 +91,8 @@ public class Diamond : MonoBehaviour
             PlayerController pc = other.GetComponent<PlayerController>();
             int newPoints = pc.IncreaseNumberOfDiamonds(points);
             pc.GetTextDiamonds().GetComponent<TMPro.TextMeshProUGUI>().text = "Diamonds: " + newPoints;
+
+            DiamondGathered.Invoke();
 
             // Effect
             Instantiate(gatherParticleSystem, transform.position, Quaternion.identity);

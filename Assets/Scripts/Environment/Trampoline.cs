@@ -12,6 +12,8 @@ public class Trampoline : MonoBehaviour
     private Color bodyColor;
     public Color BodyColor { get => bodyColor; }
 
+    [SerializeField]
+    private Animator animator;
 
     [SerializeField] 
     private Vector2 boost;
@@ -28,7 +30,7 @@ public class Trampoline : MonoBehaviour
         used = true;
 
         Debug.Log("Bumb");
-        GetComponent<Animator>().SetTrigger("Disappear");
+        animator.SetTrigger("Disappear");
     }
 
     public void Die()

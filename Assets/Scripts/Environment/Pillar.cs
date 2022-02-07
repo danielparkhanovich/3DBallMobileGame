@@ -18,6 +18,14 @@ public class Pillar : MonoBehaviour
     private GameObject model;
     public GameObject Model { get => model; }
 
+    [SerializeField]
+    private Transform diamondSpawnTransform;
+    public Transform DiamondSpawnTransform { get => diamondSpawnTransform; }
+
+    [SerializeField]
+    private Animator animator;
+    public Animator Animator { get => animator; }
+
     [Header("Construction")]
     [SerializeField]
     private GameObject body;

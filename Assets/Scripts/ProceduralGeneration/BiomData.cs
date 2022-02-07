@@ -26,8 +26,9 @@ public class BiomData : ScriptableObject
         protected set { }
     }
 
-    [SerializeField] private float ringStepNoise;
-    public float RingStepNoise
+    [Tooltip("X - step in units on line from center <-X, X>, Y - step in angles on arc <-Y,Y>")]
+    [SerializeField] private Vector2 ringStepNoise;
+    public Vector2 RingStepNoise
     {
         get
         {

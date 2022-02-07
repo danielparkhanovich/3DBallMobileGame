@@ -153,7 +153,6 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
         int pillarsNumberFactor = renderRingNumberFactor;
         float fixedRenderFov = renderFOV;
 
-        float noise = currentBiom.RingStepNoise;
         generatedRadius += currentBiom.RingStep;
 
         if (generatedRings < renderRingNumberFactor)
@@ -188,8 +187,11 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
         // full circle thetaMin = 0; thetaMax = 360.0f
         for (float theta = thetaMin; theta <= Mathf.Ceil(thetaMax); theta += angleStep)
         {
-            float rDist = Random.Range(generatedRadius, generatedRadius + noise);
-            float x = originCenter.transform.position.x + rDist * Mathf.Cos(theta * (Mathf.PI / 180.0f));
+            float noiseX = Random.Range(-currentBiom.RingStepNoise.x, currentBiom.RingStepNoise.x);
+            float noiseY = Random.Range(-currentBiom.RingStepNoise.y, currentBiom.RingStepNoise.y);
+
+            float rDist = generatedRadius + noiseX;
+            float x = originCenter.transform.position.x + rDist * Mathf.Cos(theta * (Mathf.PI / 180.0f)) + noiseY;
             float z = originCenter.transform.position.z + rDist * Mathf.Sin(theta * (Mathf.PI / 180.0f));
 
             Vector3 position = new Vector3(x, transform.position.y, z);
@@ -218,7 +220,7 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
             // Animations
             if (isAnimate)
             {
-                pillar.GetComponent<Animator>().SetTrigger("Appear");
+                pillar.Animator.SetTrigger("Appear");
             }
         }
     }
@@ -253,7 +255,9 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
             UnityEditor.Handles.color = Color.white;
             UnityEditor.Handles.DrawWireDisc(originCenter.position, Vector3.up, pillarsRingStep * i);
             UnityEditor.Handles.color = Color.cyan;
-            UnityEditor.Handles.DrawWireDisc(originCenter.position, Vector3.up, (pillarsRingStep * i) + currentBiom.RingStepNoise);
+            UnityEditor.Handles.DrawWireDisc(originCenter.position, Vector3.up, (pillarsRingStep * i) + currentBiom.RingStepNoise.x);
+            UnityEditor.Handles.color = Color.red;
+            UnityEditor.Handles.DrawWireDisc(originCenter.position, Vector3.up, (pillarsRingStep * i) + -currentBiom.RingStepNoise.x);
         }
 
         // Draw FOV

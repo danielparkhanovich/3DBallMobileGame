@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 170517625568733991}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.02, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3132834890137658212}
@@ -49,6 +49,19 @@ MonoBehaviour:
   boostPuddle: {fileID: 2072727153103323446}
   slowPuddle: {fileID: 7197644934385699366}
   puddleText: {fileID: 4927064260686253722}
+--- !u!65 &2639486829053351534
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 725175482744992330}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2072727153103323446
 GameObject:
   m_ObjectHideFlags: 0
@@ -130,6 +143,36 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &6296109835282545185
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7372037373847591462}
+  m_Layer: 0
+  m_Name: DiamondSpawnPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7372037373847591462
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6296109835282545185}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1669686757402291849}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7127400545993180198
 GameObject:
   m_ObjectHideFlags: 0
@@ -198,6 +241,8 @@ MonoBehaviour:
   trampoline: {fileID: 8071948884885222308}
   puddle: {fileID: 8789131715655182570}
   model: {fileID: 3432840489136798145}
+  diamondSpawnTransform: {fileID: 7372037373847591462}
+  animator: {fileID: 992556733}
   body: {fileID: 4022334447111291425}
   floor: {fileID: 725175482744992330}
 --- !u!114 &8071948884885222308
@@ -212,8 +257,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e792811c0671034c8dbad66eb18798a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floorColor: {r: 1, g: 0.83393437, b: 0, a: 0}
-  bodyColor: {r: 0, g: 0, b: 0, a: 0}
+  floorColor: {r: 1, g: 0.83393437, b: 0, a: 1}
+  bodyColor: {r: 0, g: 0, b: 0, a: 1}
+  animator: {fileID: 992556733}
   boost: {x: 2, y: 3}
 --- !u!1 &7197644934385699366
 GameObject:
@@ -367,10 +413,34 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3356441571387982519, guid: ff53654d4b308a049aba6631505f2c8b, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3356441571387982519, guid: ff53654d4b308a049aba6631505f2c8b, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 3356441571387982519, guid: ff53654d4b308a049aba6631505f2c8b, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3356441571387982519, guid: ff53654d4b308a049aba6631505f2c8b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 25.25
+      objectReference: {fileID: 0}
     - target: {fileID: 3724412928868884084, guid: ff53654d4b308a049aba6631505f2c8b, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 64
       objectReference: {fileID: 0}
+    - target: {fileID: 4477581078825844810, guid: ff53654d4b308a049aba6631505f2c8b, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+    - target: {fileID: 4524843234628436465, guid: ff53654d4b308a049aba6631505f2c8b, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
     - target: {fileID: 4524843234628436465, guid: ff53654d4b308a049aba6631505f2c8b, type: 3}
       propertyPath: m_Convex
       value: 1
@@ -385,6 +455,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 309022ff2051cda41b6b4e2ab83496e2, type: 2}
     m_RemovedComponents:
     - {fileID: 415222633, guid: ff53654d4b308a049aba6631505f2c8b, type: 3}
+    - {fileID: 4524843234628436465, guid: ff53654d4b308a049aba6631505f2c8b, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: ff53654d4b308a049aba6631505f2c8b, type: 3}
 --- !u!1 &3432840489136798145 stripped
 GameObject:
@@ -520,7 +591,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9096863723702198668, guid: f6a150727c2731e4abeed31634121304, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.01
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9096863723702198668, guid: f6a150727c2731e4abeed31634121304, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
