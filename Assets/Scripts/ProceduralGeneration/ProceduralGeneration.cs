@@ -47,15 +47,12 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
     [SerializeField] 
     private int ringsToNext = 25; // default 25
 
-    [SerializeField] 
-    private GameObject[] diamondsPrefabs;
-    private Dictionary<Diamond.DiamondTypes, double> diamondsProbabilities = new Dictionary<Diamond.DiamondTypes, double>();
-
     private BiomData currentBiom;
     public BiomData CurrentBiom { get => currentBiom; set => currentBiom = value; }
 
     private int generatedRings;
     public int GeneratedRings { get => generatedRings; }
+
     private float generatedRadius;
 
     private int overlappedRings;
@@ -69,7 +66,7 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
     public bool IsPooling { get => isPooling; }
 
     private bool isEditorUsing;
-    public bool IsEditorUsing { set => isEditorUsing = value; }
+    public bool IsEditorUsing { get => isEditorUsing;  set => isEditorUsing = value; }
 
 
     private void Start()
@@ -90,6 +87,7 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
         int totalPillars = renderRings * renderRingNumberFactor * Mathf.RoundToInt(renderFOV / currentBiom.PillarsFrequency);
 
         objectPooler.AddObject(pillarPrefab, totalPillars, true);
+        objectPooler.AddObject(currentBiom.DiamondsData.DiamondPrefab, 1, true);
 
         for (int i = 1; i <= renderRings; i++)
         {
@@ -108,9 +106,13 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
         generatedRadius = 0;
 
         // Clear pooled objects lists
-        for (int i = objectPooler.pooledObjects.Count - 1; i >= 0; i--)
+        for (int i = objectPooler.pooledObjectsList[0].Count - 1; i >= 0; i--)
         {
-            DestroyImmediate(objectPooler.pooledObjects[i]);
+            DestroyImmediate(objectPooler.pooledObjectsList[0][i]);
+        }
+        for (int i = objectPooler.pooledObjectsList[1].Count - 1; i >= 0; i--)
+        {
+            DestroyImmediate(objectPooler.pooledObjectsList[1][i]);
         }
 
         objectPooler.itemsToPool = new List<ObjectPoolItem>();

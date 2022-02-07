@@ -34,6 +34,13 @@ public class PillarTransformator
         {
             ReshapeToTrampoline(pillar, biomData);
         }
+
+        float drawnDiamondsChance = Random.value;
+        if (drawnDiamondsChance <= biomData.DiamondsSpawnChance)
+        {
+            GameObject diamondObj = ObjectPooler.SharedInstance.GetReadyToUsePoolObject(1, pillar.DiamondSpawnTransform.position, Quaternion.identity);
+            AddDiamond(diamondObj.GetComponent<Diamond>(), biomData.DiamondsUpperBound, biomData.DiamondsData);
+        }
     }
 
     private static void ReshapeToCommonPillar(Pillar pillar, BiomData biomData)
@@ -44,6 +51,29 @@ public class PillarTransformator
                   biomData.PillarsBodyColor,
                   biomData.PillarsFloorColor);
     }
+
+    private static void ReshapeToTrampoline(Pillar pillar, BiomData biomData)
+    {
+        Trampoline trampoline = pillar.Trampoline;
+        trampoline.enabled = true;
+
+        ReshapeTo(pillar, 
+                  Random.Range(biomData.TrampolineBodyHeightRange.x, biomData.TrampolineBodyHeightRange.y),
+                  Random.Range(biomData.TrampolineFloorSizeRange.x, biomData.TrampolineFloorSizeRange.y),
+                  trampoline.BodyColor, 
+                  trampoline.FloorColor);
+    }
+
+    private static void ReshapeTo(Pillar pillar, float h, float s, Color body, Color floor)
+    {
+        // Set size
+        pillar.Model.transform.localScale = new Vector3(s, h, s);
+
+        // Set coloring
+        pillar.BodyRenderer.material.color = body;
+        pillar.FloorRenderer.material.color = floor;
+    }
+
 
     private static void AddPuddle(Pillar pillar, BiomData biomData)
     {
@@ -71,25 +101,27 @@ public class PillarTransformator
         }
     }
 
-    private static void ReshapeToTrampoline(Pillar pillar, BiomData biomData)
+    private static void AddDiamond(Diamond diamond, DiamondsData.DiamondType upperBound, DiamondsData diamondsData)
     {
-        Trampoline trampoline = pillar.Trampoline;
-        trampoline.enabled = true;
+        float randomValue = Random.value;
+        DiamondsData.DiamondData selectedData = diamondsData.DataList[0];
 
-        ReshapeTo(pillar, 
-                  Random.Range(biomData.TrampolineBodyHeightRange.x, biomData.TrampolineBodyHeightRange.y),
-                  Random.Range(biomData.TrampolineFloorSizeRange.x, biomData.TrampolineFloorSizeRange.y),
-                  trampoline.BodyColor, 
-                  trampoline.FloorColor);
-    }
+        foreach (var data in diamondsData.DataList)
+        {
+            DiamondsData.DiamondType type = data.Type;
+            if (type != DiamondsData.DiamondType.COMMON)
+            {
+                if (randomValue <= data.Probability)
+                {
+                    selectedData = data;
+                }
+            }
+            if (type == upperBound)
+            {
+                break;
+            };
+        }
 
-    private static void ReshapeTo(Pillar pillar, float h, float s, Color body, Color floor)
-    {
-        // Set size
-        pillar.Model.transform.localScale = new Vector3(s, h, s);
-
-        // Set coloring
-        pillar.Body.transform.GetComponent<Renderer>().material.color = body;
-        pillar.Floor.transform.GetComponent<Renderer>().material.color = floor;
+        diamond.InitValues(selectedData);
     }
 }

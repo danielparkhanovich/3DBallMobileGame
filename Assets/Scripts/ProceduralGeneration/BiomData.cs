@@ -165,14 +165,11 @@ public class BiomData : ScriptableObject
         protected set { }
     }
 
-    [SerializeField] Diamond.DiamondTypes diamondsVariety;
-    public Diamond.DiamondTypes DiamondsVariety
-    {
-        get
-        {
-            return diamondsVariety;
-        }
-        protected set { }
-    }
+    [SerializeField]
+    private DiamondsData.DiamondType diamondsUpperBound;
+    public DiamondsData.DiamondType DiamondsUpperBound { get => diamondsUpperBound; }
 
+    [SerializeField]
+    private DiamondsData diamondsData;
+    public DiamondsData DiamondsData { get => diamondsData; }
 }

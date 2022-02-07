@@ -216,11 +216,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!1 &777483048 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 777483048, guid: f90a01b16d00e354986ffea039729d84, type: 3}
+--- !u!114 &777483050 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 777483050, guid: f90a01b16d00e354986ffea039729d84, type: 3}
   m_PrefabInstance: {fileID: 1346024083304651131}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &923809874 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1346024082615738665, guid: f90a01b16d00e354986ffea039729d84, type: 3}
@@ -466,11 +472,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2049333875, guid: f90a01b16d00e354986ffea039729d84, type: 3}
   m_PrefabInstance: {fileID: 1346024083304651131}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &2051582768 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2051582768, guid: f90a01b16d00e354986ffea039729d84, type: 3}
+--- !u!114 &2051582770 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2051582770, guid: f90a01b16d00e354986ffea039729d84, type: 3}
   m_PrefabInstance: {fileID: 1346024083304651131}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &371395415350171052
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -707,6 +719,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 698509104843812557, guid: f33572e20e876c343b6caa3cde07712c, type: 3}
+      propertyPath: diamondsData
+      value: 
+      objectReference: {fileID: 11400000, guid: 8e1c720ebc331f94faee93c95810e45d, type: 2}
     - target: {fileID: 698509104843812557, guid: f33572e20e876c343b6caa3cde07712c, type: 3}
       propertyPath: pillarPrefab
       value: 
@@ -966,11 +982,11 @@ PrefabInstance:
     - target: {fileID: 3226353059197662549, guid: 801e92e497552c8488b91b1e310a7eec, type: 3}
       propertyPath: textRings
       value: 
-      objectReference: {fileID: 2051582768}
+      objectReference: {fileID: 2051582770}
     - target: {fileID: 3226353059197662549, guid: 801e92e497552c8488b91b1e310a7eec, type: 3}
       propertyPath: textDiamonds
       value: 
-      objectReference: {fileID: 777483048}
+      objectReference: {fileID: 777483050}
     - target: {fileID: 4414530353535819034, guid: 801e92e497552c8488b91b1e310a7eec, type: 3}
       propertyPath: sliderObj
       value: 

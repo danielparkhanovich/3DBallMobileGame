@@ -14,9 +14,9 @@ public class PlayerController : MonoBehaviourSingleton<PlayerController>
 
     [Header("UI components")]
     [SerializeField] 
-    private GameObject textRings;
+    private TextMeshProUGUI textRings;
     [SerializeField] 
-    private GameObject textDiamonds;
+    private TextMeshProUGUI textDiamonds;
 
     [Header("Player settings")]
     [SerializeField] 
@@ -40,6 +40,7 @@ public class PlayerController : MonoBehaviourSingleton<PlayerController>
     private void Start()
     {
         ProceduralGeneration.Instance.NewRingEvent.AddListener(IncreaseNumberOfRings);
+        Diamond.DiamondGathered += IncreaseNumberOfDiamonds;
     }
 
     private void Update()
@@ -103,22 +104,17 @@ public class PlayerController : MonoBehaviourSingleton<PlayerController>
         }
     }
 
-    public int IncreaseNumberOfDiamonds(int value)
+    public void IncreaseNumberOfDiamonds(int value)
     {
         collectedDiamonds += value;
-        return collectedDiamonds;
+        textDiamonds.text = "Diamonds: " + collectedDiamonds;
     }
 
     private void IncreaseNumberOfRings()
     {
         overlappedRings += 1;
-        textRings.GetComponent<TextMeshProUGUI>().text = "Rings: " + overlappedRings;
+        textRings.text = "Rings: " + overlappedRings;
     } 
-
-    public GameObject GetTextDiamonds()
-    {
-        return textDiamonds;
-    }
 
     public float GetSpeedOfForwardMovement()
     {

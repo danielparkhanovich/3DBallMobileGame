@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f74f8ebf339066d4995e4ba820d8317d, type: 3}
+  m_Name: DiamondsData
+  m_EditorClassIdentifier: 
+  diamondPrefab: {fileID: 4805150105656393502, guid: 97f2a26ee128abb48a5bce355ca95857, type: 3}
+  dataList:
+  - Type: 0
+    ModelMaterial: {fileID: 2100000, guid: 4baa169c21d19c84889993c507a795e6, type: 2}
+    ParticleMaterial: {fileID: 2100000, guid: c33ae0fa2b06c6c449c5df14943255b1, type: 2}
+    Points: 1
+    Probability: 0.744
+  - Type: 1
+    ModelMaterial: {fileID: 2100000, guid: 740526bae3a47e24f985f354c64a9517, type: 2}
+    ParticleMaterial: {fileID: 2100000, guid: 22b3e77996e28f14ca7b116f7bd2e1e5, type: 2}
+    Points: 10
+    Probability: 0.2
+  - Type: 2
+    ModelMaterial: {fileID: 2100000, guid: a8e9dbf32e9ff594c997c2b11b55de73, type: 2}
+    ParticleMaterial: {fileID: 2100000, guid: 4e44aef9d832c1f43970e02ed87e3abf, type: 2}
+    Points: 500
+    Probability: 0.05
+  - Type: 3
+    ModelMaterial: {fileID: 2100000, guid: 7d1834a6d6869f4449b6e764218ef31e, type: 2}
+    ParticleMaterial: {fileID: 2100000, guid: 43404ececc598a3469e86227172f6a08, type: 2}
+    Points: 5000
+    Probability: 0.005
+  - Type: 4
+    ModelMaterial: {fileID: 2100000, guid: 390d4335f9e17d44b9a55303185bd970, type: 2}
+    ParticleMaterial: {fileID: 2100000, guid: 8035759a261a961418b74576c0006ba6, type: 2}
+    Points: 50000
+    Probability: 0.001

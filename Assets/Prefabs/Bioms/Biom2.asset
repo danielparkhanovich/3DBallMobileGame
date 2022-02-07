@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ringStep: 24
   pillarsFrequency: 30
-  ringStepNoise: 7
+  ringStepNoise: {x: 0, y: 0}
   pillarsFloorSizeRange: {x: 0.9, y: 1.2}
   pillarsBodyHeightRange: {x: 0.9, y: 1.1}
   pillarsFloorColor: {r: 0.2584905, g: 1, b: 0.338491, a: 0}
@@ -27,4 +27,5 @@ MonoBehaviour:
   trampolineFloorSizeRange: {x: 1, y: 1.4}
   trampolineBodyHeightRange: {x: 0.6, y: 0.8}
   diamondsSpawnChance: 0.1
-  diamondsVariety: 0
+  diamondsUpperBound: 0
+  diamondsData: {fileID: 11400000, guid: 8e1c720ebc331f94faee93c95810e45d, type: 2}

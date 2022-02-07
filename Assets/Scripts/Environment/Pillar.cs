@@ -28,12 +28,12 @@ public class Pillar : MonoBehaviour
 
     [Header("Construction")]
     [SerializeField]
-    private GameObject body;
-    public GameObject Body { get => body; }
+    private Renderer bodyRenderer;
+    public Renderer BodyRenderer { get => bodyRenderer; }
 
     [SerializeField]
-    private GameObject floor;
-    public GameObject Floor { get => floor; }
+    private Renderer floorRenderer;
+    public Renderer FloorRenderer { get => floorRenderer; }
 
     private int lifetime;
 
@@ -49,7 +49,12 @@ public class Pillar : MonoBehaviour
 
         if (lifetime <= 0)
         {
-            gameObject.SetActive(false);
+            if (ProceduralGeneration.Instance.IsEditorUsing)
+            {
+                gameObject.SetActive(false);
+            }
+
+            animator.SetTrigger("Disappear");
         }
     }
 }

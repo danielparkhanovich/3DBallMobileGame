@@ -5,101 +5,56 @@ using UnityEngine.Events;
 
 public class Diamond : MonoBehaviour
 {
-    public static UnityAction DiamondGathered;
+    public static UnityAction<int> DiamondGathered;
 
-    public enum DiamondTypes
-    {
-        COMMON,   // White color  - 1
-        RARE,     // Blue color   - 10
-        MYTHICAL, // Purple color - 500
-        DRAGON,   // Red color    - 5.000
-        ONYKS     // Black color  - 50.000
-    }
-    [SerializeField] private DiamondTypes currentType;
+    [SerializeField] private DiamondsData.DiamondType currentType;
     [SerializeField] private GameObject gatherParticleSystem;
+    [SerializeField] private Renderer _renderer;
     private int points;
 
     private void Awake()
     {
-        Destroy(gameObject, 20f);
-        switch (currentType)
-        {
-            case (DiamondTypes.COMMON):
-                points = 1;
-                break;
-            case (DiamondTypes.RARE):
-                points = 10;
-                break;
-            case (DiamondTypes.MYTHICAL):
-                points = 500;
-                break;
-            case (DiamondTypes.DRAGON):
-                points = 5000;
-                break;
-            case (DiamondTypes.ONYKS):
-                points = 50000;
-                break;
-        }
+        StartCoroutine(Disable(20f));
     }
 
-    public static GameObject SpawnDiamond(DiamondTypes currentUpperBound, GameObject[] models, Dictionary<DiamondTypes, double> diamondsProbabilities, Transform parent)
+    public void InitValues(DiamondsData.DiamondData data)
     {
-        double randomValue = Random.value;
-        DiamondTypes selectedType = DiamondTypes.COMMON;
-
-        foreach (KeyValuePair<DiamondTypes, double> entry in diamondsProbabilities)
+        if (this.currentType == data.Type)
         {
-            DiamondTypes type = entry.Key;
-            if (entry.Key != DiamondTypes.COMMON)
-            {
-                if (randomValue <= entry.Value)
-                {
-                    selectedType = entry.Key;
-                }
-            }
-            if (entry.Key == currentUpperBound)
-            {
-                break;
-            };
+            this.points = data.Points;
+            return;
         }
 
-        int model = 0;
-        switch (selectedType)
-        {
-            case DiamondTypes.RARE:
-                model = 1;
-                break;
-            case DiamondTypes.MYTHICAL:
-                model = 2;
-                break;
-            case DiamondTypes.DRAGON:
-                model = 3;
-                break;
-            case DiamondTypes.ONYKS:
-                model = 4;
-                break;
-        }
-        var spawnPosition = new Vector3(parent.position.x, parent.position.y + 2, parent.position.z);
-        return Instantiate(models[model], spawnPosition, Quaternion.identity);
+        this.currentType = data.Type;
+        this.points = data.Points;
+        this._renderer.material = data.ModelMaterial;
+
+        // Switch particle system
+        this.gatherParticleSystem.GetComponent<ParticleSystemRenderer>().material = data.ParticleMaterial;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
         {
-            // UI
-            PlayerController pc = other.GetComponent<PlayerController>();
-            int newPoints = pc.IncreaseNumberOfDiamonds(points);
-            pc.GetTextDiamonds().GetComponent<TMPro.TextMeshProUGUI>().text = "Diamonds: " + newPoints;
-
-            DiamondGathered.Invoke();
+            DiamondGathered.Invoke(points);
 
             // Effect
-            Instantiate(gatherParticleSystem, transform.position, Quaternion.identity);
+            gatherParticleSystem.GetComponent<ParticleSystem>().Play();
 
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 
+    private IEnumerator Disable(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        gameObject.SetActive(false);
+    }
 
+    private IEnumerator PlayParticle()
+    {
+        // .. un parent object play and parent
+        yield return null;
+    }
 }
