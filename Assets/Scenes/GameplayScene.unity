@@ -237,6 +237,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7127400545993180198, guid: be72d9a4113477c478039f6b271b9daf, type: 3}
   m_PrefabInstance: {fileID: 7127400545273279133}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1140815890 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 880734715, guid: f33572e20e876c343b6caa3cde07712c, type: 3}
+  m_PrefabInstance: {fileID: 698509104931188459}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73084be38231d604193beb34981969d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1229043573 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8081686391886565654, guid: f90a01b16d00e354986ffea039729d84, type: 3}
@@ -495,6 +506,10 @@ PrefabInstance:
       value: GameController
       objectReference: {fileID: 0}
     - target: {fileID: 371395416354620961, guid: 4175f7bfd6e074d41933b8bd7f599cc0, type: 3}
+      propertyPath: pooler
+      value: 
+      objectReference: {fileID: 1140815890}
+    - target: {fileID: 371395416354620961, guid: 4175f7bfd6e074d41933b8bd7f599cc0, type: 3}
       propertyPath: PauseEvent.m_PersistentCalls.m_Calls.Array.size
       value: 3
       objectReference: {fileID: 0}
@@ -728,9 +743,33 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1008885135}
     - target: {fileID: 698509104843812557, guid: f33572e20e876c343b6caa3cde07712c, type: 3}
-      propertyPath: ringsToDestroyOld
-      value: 3
+      propertyPath: bioms.Array.size
+      value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 698509104843812557, guid: f33572e20e876c343b6caa3cde07712c, type: 3}
+      propertyPath: ringsToDestroyOld
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 698509104843812557, guid: f33572e20e876c343b6caa3cde07712c, type: 3}
+      propertyPath: bioms.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: b1aba688a166c30448c9dfc4d4550efb, type: 2}
+    - target: {fileID: 698509104843812557, guid: f33572e20e876c343b6caa3cde07712c, type: 3}
+      propertyPath: bioms.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: 9693c25f01481c44e8d758cff4361dcb, type: 2}
+    - target: {fileID: 698509104843812557, guid: f33572e20e876c343b6caa3cde07712c, type: 3}
+      propertyPath: bioms.Array.data[3]
+      value: 
+      objectReference: {fileID: 11400000, guid: 64c4fdeeb6d7045469da1f21a1fa8b64, type: 2}
+    - target: {fileID: 698509104843812557, guid: f33572e20e876c343b6caa3cde07712c, type: 3}
+      propertyPath: bioms.Array.data[4]
+      value: 
+      objectReference: {fileID: 11400000, guid: f9e8faa6b8e4528488451a9b060d226f, type: 2}
+    - target: {fileID: 698509104843812557, guid: f33572e20e876c343b6caa3cde07712c, type: 3}
+      propertyPath: bioms.Array.data[5]
+      value: 
+      objectReference: {fileID: 11400000, guid: 8404a887f943a9f4e8be06d21a724e60, type: 2}
     - target: {fileID: 698509104843812558, guid: f33572e20e876c343b6caa3cde07712c, type: 3}
       propertyPath: m_Name
       value: CenterProcGen

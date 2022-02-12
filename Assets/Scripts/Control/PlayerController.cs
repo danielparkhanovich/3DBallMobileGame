@@ -62,6 +62,11 @@ public class PlayerController : MonoBehaviourSingleton<PlayerController>
             transform.Translate(Vector3.forward * force);
             isThrusting = false;
         }
+
+        if (transform.position.y <= 0f)
+        {
+            GameController.Instance.GameOver();
+        }
     }
 
     public void TurnTickLeft(float singleAngleRotate)
@@ -99,8 +104,7 @@ public class PlayerController : MonoBehaviourSingleton<PlayerController>
         if (collision.gameObject.tag == "Obstacle")
         {
             // Lose
-            //Destroy(gameObject);
-            SceneManager.Instance.StartGame();
+            GameController.Instance.GameOver();
         }
     }
 

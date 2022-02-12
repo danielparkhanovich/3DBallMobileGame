@@ -5,6 +5,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Procedural/Biom", fileName = "NewBiom")]
 public class BiomData : ScriptableObject
 {
+    [SerializeField]
+    private int ringsToNext;
+    public int RingsToNext { get => ringsToNext; }
+
     [SerializeField] private float ringStep;
     public float RingStep
     {
@@ -172,4 +176,29 @@ public class BiomData : ScriptableObject
     [SerializeField]
     private DiamondsData diamondsData;
     public DiamondsData DiamondsData { get => diamondsData; }
+
+    private int currentRing = 0;
+
+
+    public void SetNewBiom()
+    {
+        currentRing = 0;
+    }
+
+    public void GeneratedRing()
+    {
+        currentRing += 1;
+    }
+
+    public bool IsNewBiom()
+    {
+        if (currentRing >= ringsToNext)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }

@@ -43,10 +43,7 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
     [SerializeField] 
     private List<BiomData> bioms;
     public List<BiomData> Bioms { get => bioms; }
-    
-    [SerializeField] 
-    private int ringsToNext = 25; // default 25
-
+   
     private BiomData currentBiom;
     public BiomData CurrentBiom { get => currentBiom; set => currentBiom = value; }
 
@@ -54,6 +51,7 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
     public int GeneratedRings { get => generatedRings; }
 
     private float generatedRadius;
+    private float overlappedDistance;
 
     private int overlappedRings;
 
@@ -74,7 +72,7 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
         isEditorUsing = false;
 
         ballTransform = PlayerController.Instance.transform;
-        currentBiom = bioms[0];
+        SwitchBiom(0);
 
         ResetRings();
         PrerenderRings(true);
@@ -124,21 +122,12 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
         // New ring
         var resultVector = ballTransform.position - originCenter.transform.position;
 
-        if (resultVector.magnitude >= currentBiom.RingStep * (overlappedRings + 1))
+        if (resultVector.magnitude >= overlappedDistance + currentBiom.RingStep)
         {
             OverlapRing(true);
             NewRingEvent.Invoke();
-        }
-    }
 
-    public void CheckNewBiom(int ballRing)
-    {
-        int numberOfBioms = bioms.Count;
-        int currentBiomIndex = bioms.IndexOf(currentBiom);
-        if (Mathf.Floor(ballRing / ringsToNext) > currentBiomIndex && currentBiomIndex < numberOfBioms - 1)
-        {
-            currentBiomIndex += 1;
-            Debug.Log(currentBiom);
+            overlappedDistance += currentBiom.RingStep;
         }
     }
 
@@ -163,7 +152,7 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
         }
         else if (generatedRings > renderRingNumberFactor)
         {
-            fixedRenderFov *= currentBiom.RingStep * renderRingNumberFactor / generatedRadius;
+            fixedRenderFov *= 19f * renderRingNumberFactor / generatedRadius;
         }
 
         int numberOfPillars = pillarsNumberFactor * Mathf.RoundToInt(renderFOV / currentBiom.PillarsFrequency);
@@ -199,6 +188,9 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
             Vector3 position = new Vector3(x, transform.position.y, z);
             GameObject pillarObj = objectPooler.GetReadyToUsePoolObject(0, position, Quaternion.identity);
 
+            //Quaternion rotation = Quaternion.Euler(0f, Vector3.Angle(originCenter.transform.position, ballTransform.position), 0f);
+            //GameObject pillarObj = objectPooler.GetReadyToUsePoolObject(0, position, rotation);
+
             PillarTransformator.ReshapePillar(pillarObj, currentBiom);
 
             // Set lifetime
@@ -225,28 +217,37 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
                 pillar.Animator.SetTrigger("Appear");
             }
         }
+
+        TrySwitchBiom();
     }
 
-    private void CreatePillar(float x, float z, float s, float h, Color[] ringColor, bool isAnimate, int ring)
+    private void TrySwitchBiom()
     {
+        currentBiom.GeneratedRing();
+        if (currentBiom.IsNewBiom())
+        {
+            SwitchBiom(bioms.IndexOf(currentBiom) + 1);
+        }
+    }
 
-        // Diamonds
-        //if (Random.value <= currentBiom.DiamondsSpawnChance && obj.tag == "Bounce")
-        //{
-        //    GameObject diamond = Diamond.SpawnDiamond(
-        //        currentBiom.DiamondsVariety, 
-        //        diamondsPrefabs, 
-        //        diamondsProbabilities, 
-        //        pillarModel.GetChild(0));
-        //    diamond.transform.parent = pillarModel;
-        //}
+    private void SwitchBiom(int index)
+    {
+        if (index < bioms.Count - 1)
+        {
+            currentBiom = bioms[index];
+            currentBiom.SetNewBiom();
+        }
+        else
+        {
+            return;
+        }
     }
 
     #if UNITY_EDITOR
     void OnDrawGizmosSelected()
     {
         if (!currentBiom)
-            currentBiom = bioms[0];
+            SwitchBiom(0);
         if (!ballTransform)
             ballTransform = PlayerController.Instance.transform;
 

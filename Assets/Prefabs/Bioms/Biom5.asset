@@ -10,23 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e86586431c1311449aaf233ce644d2ca, type: 3}
-  m_Name: Biom2
+  m_Name: Biom5
   m_EditorClassIdentifier: 
   ringsToNext: 25
-  ringStep: 24
-  pillarsFrequency: 40
+  ringStep: 45
+  pillarsFrequency: 35
   ringStepNoise: {x: 0, y: 0}
-  pillarsFloorSizeRange: {x: 0.9, y: 1.2}
-  pillarsBodyHeightRange: {x: 0.9, y: 1.1}
-  pillarsFloorColor: {r: 0.2584905, g: 1, b: 0.338491, a: 0}
+  pillarsFloorSizeRange: {x: 0.8, y: 1.3}
+  pillarsBodyHeightRange: {x: 1.1, y: 1.35}
+  pillarsFloorColor: {r: 0.50980395, g: 0.5624355, b: 0.99215686, a: 0}
   pillarsBodyColor: {r: 0.20754719, g: 0.20754719, b: 0.20754719, a: 0}
-  puddleSpawnChance: 0
-  puddleBoostChance: 0
-  puddleBoostPower: 0
-  puddleSlowPower: 0
+  puddleSpawnChance: 0.05
+  puddleBoostChance: 0.6
+  puddleBoostPower: 0.1
+  puddleSlowPower: 0.15
   trampolineSpawnChance: 0.05
-  trampolineFloorSizeRange: {x: 1, y: 1.4}
-  trampolineBodyHeightRange: {x: 0.6, y: 0.8}
-  diamondsSpawnChance: 0.1
-  diamondsUpperBound: 0
+  trampolineFloorSizeRange: {x: 1, y: 1.1}
+  trampolineBodyHeightRange: {x: 1, y: 1.15}
+  diamondsSpawnChance: 0.15
+  diamondsUpperBound: 2
   diamondsData: {fileID: 11400000, guid: 8e1c720ebc331f94faee93c95810e45d, type: 2}

@@ -10,15 +10,20 @@ public class Diamond : MonoBehaviour
     [SerializeField] private DiamondsData.DiamondType currentType;
     [SerializeField] private GameObject gatherParticleSystem;
     [SerializeField] private Renderer _renderer;
+    [SerializeField] private float diamondLifetime;
     private int points;
 
-    private void Awake()
-    {
-        StartCoroutine(Disable(20f));
-    }
 
     public void InitValues(DiamondsData.DiamondData data)
     {
+        StopAllCoroutines();
+
+        gameObject.SetActive(true);
+
+        ResetGatherEffect();
+
+        StartCoroutine(Disable(diamondLifetime));
+
         if (this.currentType == data.Type)
         {
             this.points = data.Points;
@@ -38,8 +43,10 @@ public class Diamond : MonoBehaviour
         if (other.tag == "Player")
         {
             DiamondGathered.Invoke(points);
+            StopAllCoroutines();
 
             // Effect
+            gatherParticleSystem.transform.parent = null;
             gatherParticleSystem.GetComponent<ParticleSystem>().Play();
 
             gameObject.SetActive(false);
@@ -52,9 +59,11 @@ public class Diamond : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    private IEnumerator PlayParticle()
+    private void ResetGatherEffect()
     {
-        // .. un parent object play and parent
-        yield return null;
+        gatherParticleSystem.SetActive(true);
+        gatherParticleSystem.transform.parent = transform;
+        gatherParticleSystem.transform.localPosition = Vector3.zero;
+        gatherParticleSystem.transform.localScale = Vector3.one;
     }
 }

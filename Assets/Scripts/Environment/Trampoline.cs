@@ -19,20 +19,17 @@ public class Trampoline : MonoBehaviour
     private Vector2 boost;
     public Vector2 Boost { set => boost = value; }
 
-    private bool used = false;
-
 
     public void BumpBall(GameObject ball)
     {
         Rigidbody rb = ball.GetComponent<Rigidbody>();
         ball.GetComponent<PlayerController>().IncreaseSpeedOfForwardMovement(boost.x);
         rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y + boost.y, rb.velocity.z);
-        used = true;
 
-        Debug.Log("Bumb");
         animator.SetTrigger("Disappear");
     }
 
+    // Used by animator
     public void Die()
     {
         gameObject.SetActive(false);

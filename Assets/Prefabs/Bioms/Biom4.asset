@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e86586431c1311449aaf233ce644d2ca, type: 3}
   m_Name: Biom4
   m_EditorClassIdentifier: 
+  ringsToNext: 25
   ringStep: 28
   pillarsFrequency: 50
   ringStepNoise: {x: 0, y: 0}

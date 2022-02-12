@@ -56,6 +56,11 @@ public class GameController : MonoBehaviourSingleton<GameController>
         PauseGame();
     }
 
+    public void GameOver()
+    {
+        SceneManager.Instance.StartGame();
+    }
+
     public void PauseGame()
     {
         Time.timeScale = 0f;

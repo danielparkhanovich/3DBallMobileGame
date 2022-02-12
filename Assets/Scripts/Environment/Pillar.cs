@@ -35,6 +35,9 @@ public class Pillar : MonoBehaviour
     private Renderer floorRenderer;
     public Renderer FloorRenderer { get => floorRenderer; }
 
+    private GameObject diamondOnPillar;
+    public GameObject DiamondOnPillar { set => diamondOnPillar = value; }
+
     private int lifetime;
 
 
@@ -43,18 +46,46 @@ public class Pillar : MonoBehaviour
         this.lifetime = lifetime;
     }
 
+    public void HideAfterDelay(float delay)
+    {
+        StopAllCoroutines();
+        StartCoroutine(DisableWithDelay(delay));
+    }
+
     public void TryDisable()
     {
         lifetime -= 1;
 
         if (lifetime <= 0)
         {
-            if (ProceduralGeneration.Instance.IsEditorUsing)
-            {
-                gameObject.SetActive(false);
-            }
-
-            animator.SetTrigger("Disappear");
+            Disable("Disappear");
         }
+    }
+
+    private IEnumerator DisableWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Disable("DisappearSlow");
+    }
+
+    public void Disable(string animation)
+    {
+        lifetime = 0;
+        if (ProceduralGeneration.Instance.IsEditorUsing)
+        {
+            gameObject.SetActive(false);
+        }
+
+        animator.SetTrigger(animation);
+    }
+
+
+    public void OnDisable()
+    {
+        if (diamondOnPillar && diamondOnPillar.transform.parent == transform)
+        {
+            diamondOnPillar.SetActive(false);
+        }
+        diamondOnPillar = null;
     }
 }

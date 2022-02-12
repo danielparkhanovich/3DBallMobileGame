@@ -133,6 +133,7 @@ MonoBehaviour:
   currentType: 0
   gatherParticleSystem: {fileID: 3764776761499369539}
   _renderer: {fileID: 8173603183497057408}
+  diamondLifetime: 20
 --- !u!135 &2479905101859457205
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -245,15 +246,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 66195563435339530, guid: 1bd01303a17a2ca47b10cacea7e52cd1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -12.572664
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 66195563435339530, guid: 1bd01303a17a2ca47b10cacea7e52cd1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -14.345463
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 66195563435339530, guid: 1bd01303a17a2ca47b10cacea7e52cd1, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -9.44071
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 66195563435339530, guid: 1bd01303a17a2ca47b10cacea7e52cd1, type: 3}
       propertyPath: m_LocalRotation.w

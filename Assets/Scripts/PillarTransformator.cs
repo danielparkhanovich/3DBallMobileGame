@@ -8,7 +8,7 @@ public enum PillarType
     TRAMPOLINE
 }
 
-public class PillarTransformator
+public static class PillarTransformator
 {
     public static void ReshapePillar(GameObject pillarObj, BiomData biomData)
     {
@@ -39,7 +39,10 @@ public class PillarTransformator
         if (drawnDiamondsChance <= biomData.DiamondsSpawnChance)
         {
             GameObject diamondObj = ObjectPooler.SharedInstance.GetReadyToUsePoolObject(1, pillar.DiamondSpawnTransform.position, Quaternion.identity);
+            diamondObj.transform.parent = pillar.transform; 
             AddDiamond(diamondObj.GetComponent<Diamond>(), biomData.DiamondsUpperBound, biomData.DiamondsData);
+            diamondObj.transform.localScale = new Vector3(1f, 1f, 1f);
+            pillar.DiamondOnPillar = diamondObj;
         }
     }
 
@@ -62,6 +65,8 @@ public class PillarTransformator
                   Random.Range(biomData.TrampolineFloorSizeRange.x, biomData.TrampolineFloorSizeRange.y),
                   trampoline.BodyColor, 
                   trampoline.FloorColor);
+
+        pillar.HideAfterDelay(10f);
     }
 
     private static void ReshapeTo(Pillar pillar, float h, float s, Color body, Color floor)
@@ -89,9 +94,11 @@ public class PillarTransformator
             puddle.PuddleText.text = (int)(biomData.PuddleBoostPower * 100) + "%";
             puddle.BoostPower = biomData.PuddleBoostPower;
             puddle.CurrentType = Puddle.PuddleTypes.BOOST;
+            return;
         }
         else
         {
+            Debug.Log("SLOOW");
             puddle.SlowPuddle.SetActive(true);
             puddle.BoostPuddle.SetActive(false);
 
