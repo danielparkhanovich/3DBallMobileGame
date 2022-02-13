@@ -12,21 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e86586431c1311449aaf233ce644d2ca, type: 3}
   m_Name: Biom2
   m_EditorClassIdentifier: 
-  ringsToNext: 25
-  ringStep: 24
-  pillarsFrequency: 40
-  ringStepNoise: {x: 0, y: 0}
-  pillarsFloorSizeRange: {x: 0.9, y: 1.2}
-  pillarsBodyHeightRange: {x: 0.9, y: 1.1}
-  pillarsFloorColor: {r: 0.2584905, g: 1, b: 0.338491, a: 0}
-  pillarsBodyColor: {r: 0.20754719, g: 0.20754719, b: 0.20754719, a: 0}
-  puddleSpawnChance: 0
-  puddleBoostChance: 0
-  puddleBoostPower: 0
-  puddleSlowPower: 0
-  trampolineSpawnChance: 0.05
-  trampolineFloorSizeRange: {x: 1, y: 1.4}
-  trampolineBodyHeightRange: {x: 0.6, y: 0.8}
-  diamondsSpawnChance: 0.1
-  diamondsUpperBound: 0
+  biom:
+    biomName: Biom2
+    ringsToNext: 15
+    ringStep: 22
+    pillarsFrequency: 60
+    ringStepNoise: {x: 1, y: 1}
+    pillarsFloorSizeRange: {x: 1.2, y: 1.4}
+    pillarsBodyHeightRange: {x: 1, y: 1.2}
+    pillarsFloorColor: {r: 1, g: 0.654902, b: 0, a: 1}
+    pillarsBodyColor: {r: 0.2264151, g: 0.2264151, b: 0.2264151, a: 0}
+    puddleSpawnChance: 0
+    puddleBoostChance: 0
+    puddleBoostPower: 0
+    puddleSlowPower: 0
+    trampolineSpawnChance: 0.1
+    trampolineFloorSizeRange: {x: 1, y: 1.1}
+    trampolineBodyHeightRange: {x: 0.95, y: 1}
+    diamondsSpawnChance: 0.05
+    diamondsUpperBound: 0
   diamondsData: {fileID: 11400000, guid: 8e1c720ebc331f94faee93c95810e45d, type: 2}

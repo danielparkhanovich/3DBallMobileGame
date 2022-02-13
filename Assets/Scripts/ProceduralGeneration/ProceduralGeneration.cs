@@ -40,13 +40,10 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
     private GameObject trampolineObj;
 
     [Header("Bioms area")]
-    [SerializeField] 
-    private List<BiomData> bioms;
-    public List<BiomData> Bioms { get => bioms; }
+    [SerializeField]
+    private BiomsGenerator biomsGenerator;
+    public BiomsGenerator BiomsGenerator { get => biomsGenerator; }
    
-    private BiomData currentBiom;
-    public BiomData CurrentBiom { get => currentBiom; set => currentBiom = value; }
-
     private int generatedRings;
     public int GeneratedRings { get => generatedRings; }
 
@@ -72,7 +69,7 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
         isEditorUsing = false;
 
         ballTransform = PlayerController.Instance.transform;
-        SwitchBiom(0);
+        biomsGenerator.Initialize();
 
         ResetRings();
         PrerenderRings(true);
@@ -82,10 +79,10 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
     {
         this.isPooling = isActivePooling;
 
-        int totalPillars = renderRings * renderRingNumberFactor * Mathf.RoundToInt(renderFOV / currentBiom.PillarsFrequency);
+        int totalPillars = renderRings * renderRingNumberFactor * Mathf.RoundToInt(renderFOV / biomsGenerator.CurrentBiom.PillarsFrequency);
 
         objectPooler.AddObject(pillarPrefab, totalPillars, true);
-        objectPooler.AddObject(currentBiom.DiamondsData.DiamondPrefab, 1, true);
+        objectPooler.AddObject(biomsGenerator.DiamondsData.DiamondPrefab, 1, true);
 
         for (int i = 1; i <= renderRings; i++)
         {
@@ -122,12 +119,12 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
         // New ring
         var resultVector = ballTransform.position - originCenter.transform.position;
 
-        if (resultVector.magnitude >= overlappedDistance + currentBiom.RingStep)
+        if (resultVector.magnitude >= overlappedDistance + biomsGenerator.CurrentBiom.RingStep)
         {
             OverlapRing(true);
             NewRingEvent.Invoke();
 
-            overlappedDistance += currentBiom.RingStep;
+            overlappedDistance += biomsGenerator.CurrentBiom.RingStep;
         }
     }
 
@@ -144,7 +141,7 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
         int pillarsNumberFactor = renderRingNumberFactor;
         float fixedRenderFov = renderFOV;
 
-        generatedRadius += currentBiom.RingStep;
+        generatedRadius += biomsGenerator.CurrentBiom.RingStep;
 
         if (generatedRings < renderRingNumberFactor)
         {
@@ -155,7 +152,7 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
             fixedRenderFov *= 19f * renderRingNumberFactor / generatedRadius;
         }
 
-        int numberOfPillars = pillarsNumberFactor * Mathf.RoundToInt(renderFOV / currentBiom.PillarsFrequency);
+        int numberOfPillars = pillarsNumberFactor * Mathf.RoundToInt(renderFOV / biomsGenerator.CurrentBiom.PillarsFrequency);
 
         Vector2 ballPos = new Vector2(ballTransform.position.x, ballTransform.position.z);
         float ballMoveAngle = Mathf.Atan2(ballPos.y - originCenter.transform.position.z, ballPos.x - originCenter.transform.position.x) * (180.0f / Mathf.PI);
@@ -178,8 +175,8 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
         // full circle thetaMin = 0; thetaMax = 360.0f
         for (float theta = thetaMin; theta <= Mathf.Ceil(thetaMax); theta += angleStep)
         {
-            float noiseX = Random.Range(-currentBiom.RingStepNoise.x, currentBiom.RingStepNoise.x);
-            float noiseY = Random.Range(-currentBiom.RingStepNoise.y, currentBiom.RingStepNoise.y);
+            float noiseX = Random.Range(-biomsGenerator.CurrentBiom.RingStepNoise.x, biomsGenerator.CurrentBiom.RingStepNoise.x);
+            float noiseY = Random.Range(-biomsGenerator.CurrentBiom.RingStepNoise.y, biomsGenerator.CurrentBiom.RingStepNoise.y);
 
             float rDist = generatedRadius + noiseX;
             float x = originCenter.transform.position.x + rDist * Mathf.Cos(theta * (Mathf.PI / 180.0f)) + noiseY;
@@ -191,7 +188,7 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
             //Quaternion rotation = Quaternion.Euler(0f, Vector3.Angle(originCenter.transform.position, ballTransform.position), 0f);
             //GameObject pillarObj = objectPooler.GetReadyToUsePoolObject(0, position, rotation);
 
-            PillarTransformator.ReshapePillar(pillarObj, currentBiom);
+            PillarTransformator.ReshapePillar(pillarObj, biomsGenerator.CurrentBiom, biomsGenerator);
 
             // Set lifetime
             Pillar pillar = pillarObj.GetComponent<Pillar>();
@@ -218,49 +215,25 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
             }
         }
 
-        TrySwitchBiom();
-    }
-
-    private void TrySwitchBiom()
-    {
-        currentBiom.GeneratedRing();
-        if (currentBiom.IsNewBiom())
-        {
-            SwitchBiom(bioms.IndexOf(currentBiom) + 1);
-        }
-    }
-
-    private void SwitchBiom(int index)
-    {
-        if (index < bioms.Count - 1)
-        {
-            currentBiom = bioms[index];
-            currentBiom.SetNewBiom();
-        }
-        else
-        {
-            return;
-        }
+        biomsGenerator.TrySwitchBiom();
     }
 
     #if UNITY_EDITOR
     void OnDrawGizmosSelected()
     {
-        if (!currentBiom)
-            SwitchBiom(0);
         if (!ballTransform)
             ballTransform = PlayerController.Instance.transform;
 
         Gizmos.color = Color.yellow;
-        float pillarsRingStep = currentBiom.RingStep;
+        float pillarsRingStep = biomsGenerator.CurrentBiom.RingStep;
         for (int i = 1; i <= generatedRings; i++)
         {
             UnityEditor.Handles.color = Color.white;
             UnityEditor.Handles.DrawWireDisc(originCenter.position, Vector3.up, pillarsRingStep * i);
             UnityEditor.Handles.color = Color.cyan;
-            UnityEditor.Handles.DrawWireDisc(originCenter.position, Vector3.up, (pillarsRingStep * i) + currentBiom.RingStepNoise.x);
+            UnityEditor.Handles.DrawWireDisc(originCenter.position, Vector3.up, (pillarsRingStep * i) + biomsGenerator.CurrentBiom.RingStepNoise.x);
             UnityEditor.Handles.color = Color.red;
-            UnityEditor.Handles.DrawWireDisc(originCenter.position, Vector3.up, (pillarsRingStep * i) + -currentBiom.RingStepNoise.x);
+            UnityEditor.Handles.DrawWireDisc(originCenter.position, Vector3.up, (pillarsRingStep * i) + -biomsGenerator.CurrentBiom.RingStepNoise.x);
         }
 
         // Draw FOV

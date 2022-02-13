@@ -242,7 +242,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 880734715, guid: f33572e20e876c343b6caa3cde07712c, type: 3}
   m_PrefabInstance: {fileID: 698509104931188459}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 698509104931188460}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 73084be38231d604193beb34981969d4, type: 3}
@@ -743,6 +743,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1008885135}
     - target: {fileID: 698509104843812557, guid: f33572e20e876c343b6caa3cde07712c, type: 3}
+      propertyPath: biomsGenerator
+      value: 
+      objectReference: {fileID: 698509104931188461}
+    - target: {fileID: 698509104843812557, guid: f33572e20e876c343b6caa3cde07712c, type: 3}
       propertyPath: bioms.Array.size
       value: 6
       objectReference: {fileID: 0}
@@ -776,6 +780,55 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f33572e20e876c343b6caa3cde07712c, type: 3}
+--- !u!1 &698509104931188460 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 698509104843812558, guid: f33572e20e876c343b6caa3cde07712c, type: 3}
+  m_PrefabInstance: {fileID: 698509104931188459}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &698509104931188461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 698509104931188460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 468636f270b8e6c4c827668056a61d38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  predefinedBioms:
+  - {fileID: 11400000, guid: 46131ca02caf8bb47a4cb6e0aa96e722, type: 2}
+  specialBioms:
+  - BiomData: {fileID: 0}
+    SpawnChance: 0
+  colorsForPillars:
+  - FloorColor: {r: 0, g: 0, b: 0, a: 0}
+    BodyColor: {r: 0, g: 0, b: 0, a: 0}
+  - FloorColor: {r: 0, g: 0, b: 0, a: 0}
+    BodyColor: {r: 0, g: 0, b: 0, a: 0}
+  - FloorColor: {r: 0, g: 0, b: 0, a: 0}
+    BodyColor: {r: 0, g: 0, b: 0, a: 0}
+  - FloorColor: {r: 0, g: 0, b: 0, a: 0}
+    BodyColor: {r: 0, g: 0, b: 0, a: 0}
+  - FloorColor: {r: 0, g: 0, b: 0, a: 0}
+    BodyColor: {r: 0, g: 0, b: 0, a: 0}
+  - FloorColor: {r: 0, g: 0, b: 0, a: 0}
+    BodyColor: {r: 0, g: 0, b: 0, a: 0}
+  - FloorColor: {r: 0, g: 0, b: 0, a: 0}
+    BodyColor: {r: 0, g: 0, b: 0, a: 0}
+  - FloorColor: {r: 0, g: 0, b: 0, a: 0}
+    BodyColor: {r: 0, g: 0, b: 0, a: 0}
+  - FloorColor: {r: 0, g: 0, b: 0, a: 0}
+    BodyColor: {r: 0, g: 0, b: 0, a: 0}
+  - FloorColor: {r: 0, g: 0, b: 0, a: 0}
+    BodyColor: {r: 0, g: 0, b: 0, a: 0}
+  - FloorColor: {r: 0, g: 0, b: 0, a: 0}
+    BodyColor: {r: 0, g: 0, b: 0, a: 0}
+  maxBiomGeneration: 0
+  infiniteGeneration: 0
+  generatorSetupScriptable: {fileID: 11400000, guid: faeef45795b33644993432cac49a3527, type: 2}
+  diamondsData: {fileID: 11400000, guid: 8e1c720ebc331f94faee93c95810e45d, type: 2}
 --- !u!1001 &1346024083304651131
 PrefabInstance:
   m_ObjectHideFlags: 0

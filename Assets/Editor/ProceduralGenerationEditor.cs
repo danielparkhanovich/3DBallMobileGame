@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System.Linq;
 
 [CustomEditor(typeof(ProceduralGeneration))]
 public class ProceduralGenerationEditor : Editor
 {
-    private int biomSliderValue = 1;
+    private int biomValue;
     private bool onPoolingToggle = false;
 
 
@@ -18,14 +19,12 @@ public class ProceduralGenerationEditor : Editor
 
         ProceduralGeneration proc = (ProceduralGeneration)target;
 
-        if (!proc.CurrentBiom)
-            proc.CurrentBiom = proc.Bioms[0];
         if (!proc.BallTransform)
             proc.BallTransform = PlayerController.Instance.transform;
 
         CustomEditorUtilities.HorizontalInspectorLine(Color.gray, textBelow: "Debug area");
         GUILayout.Label("Generated rings: " + proc.GeneratedRings);
-        GUILayout.Label("Current biom: " + proc.CurrentBiom.name);
+        GUILayout.Label("Current biom: " + proc.BiomsGenerator.CurrentBiom.BiomName);
         GUILayout.Label("Pooling is active: " + proc.IsPooling);
 
         CustomEditorUtilities.HorizontalInspectorLine(Color.gray, textBelow: "Test procedural generation area");
@@ -59,12 +58,19 @@ public class ProceduralGenerationEditor : Editor
         GUI.backgroundColor = defaultColor;
 
         GUI.backgroundColor = new Color32(137, 207, 240, 255);
-        if (GUILayout.Button("Change biom"))
-        {
-            proc.CurrentBiom = proc.Bioms[biomSliderValue - 1];
-        }
-        GUI.backgroundColor = defaultColor;
+        EditorGUILayout.BeginHorizontal();
 
-        biomSliderValue = EditorGUILayout.IntSlider(biomSliderValue, 1, proc.Bioms.Count + 1);
+        GUILayout.Label("Change biom: ");
+
+        var notNullOnly = proc.BiomsGenerator.PredefinedBioms.Where(x => x != null);
+
+        biomValue = EditorGUILayout.Popup(biomValue, notNullOnly.Select(x => x.Biom.BiomName).ToArray());
+        if (proc.BiomsGenerator.CurrentBiom != proc.BiomsGenerator.PredefinedBioms[biomValue].Biom)
+        {
+            proc.BiomsGenerator.CurrentBiom = proc.BiomsGenerator.PredefinedBioms[biomValue].Biom;
+        }
+        EditorGUILayout.EndHorizontal();
+
+        GUI.backgroundColor = defaultColor;
     }
 }

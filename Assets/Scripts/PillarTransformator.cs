@@ -10,7 +10,7 @@ public enum PillarType
 
 public static class PillarTransformator
 {
-    public static void ReshapePillar(GameObject pillarObj, BiomData biomData)
+    public static void ReshapePillar(GameObject pillarObj, BiomContainer biomContainer, BiomsGenerator biomsGenerator)
     {
         float drawnTrampolineChance = Random.value;
 
@@ -20,49 +20,49 @@ public static class PillarTransformator
         pillar.Puddle.enabled = false;
         pillar.Puddle.gameObject.SetActive(false);
 
-        if (drawnTrampolineChance > biomData.TrampolineSpawnChance)
+        if (drawnTrampolineChance > biomContainer.TrampolineSpawnChance)
         {
-            ReshapeToCommonPillar(pillar, biomData);
+            ReshapeToCommonPillar(pillar, biomContainer);
 
             float drawnPuddleChance = Random.value;
-            if (drawnPuddleChance <= biomData.PuddleSpawnChance)
+            if (drawnPuddleChance <= biomContainer.PuddleSpawnChance)
             {
-                AddPuddle(pillar, biomData);
+                AddPuddle(pillar, biomContainer);
             }
         }
         else
         {
-            ReshapeToTrampoline(pillar, biomData);
+            ReshapeToTrampoline(pillar, biomContainer);
         }
 
         float drawnDiamondsChance = Random.value;
-        if (drawnDiamondsChance <= biomData.DiamondsSpawnChance)
+        if (drawnDiamondsChance <= biomContainer.DiamondsSpawnChance)
         {
             GameObject diamondObj = ObjectPooler.SharedInstance.GetReadyToUsePoolObject(1, pillar.DiamondSpawnTransform.position, Quaternion.identity);
             diamondObj.transform.parent = pillar.transform; 
-            AddDiamond(diamondObj.GetComponent<Diamond>(), biomData.DiamondsUpperBound, biomData.DiamondsData);
+            AddDiamond(diamondObj.GetComponent<Diamond>(), biomContainer.DiamondsUpperBound, biomsGenerator.DiamondsData);
             diamondObj.transform.localScale = new Vector3(1f, 1f, 1f);
             pillar.DiamondOnPillar = diamondObj;
         }
     }
 
-    private static void ReshapeToCommonPillar(Pillar pillar, BiomData biomData)
+    private static void ReshapeToCommonPillar(Pillar pillar, BiomContainer biomContainer)
     {
         ReshapeTo(pillar,
-                  Random.Range(biomData.PillarsBodyHeightRange.x, biomData.PillarsBodyHeightRange.y),
-                  Random.Range(biomData.PillarsFloorSizeRange.x, biomData.PillarsFloorSizeRange.y),
-                  biomData.PillarsBodyColor,
-                  biomData.PillarsFloorColor);
+                  Random.Range(biomContainer.PillarsBodyHeightRange.Min, biomContainer.PillarsBodyHeightRange.Max),
+                  Random.Range(biomContainer.PillarsFloorSizeRange.Min, biomContainer.PillarsFloorSizeRange.Max),
+                  biomContainer.PillarsBodyColor,
+                  biomContainer.PillarsFloorColor);
     }
 
-    private static void ReshapeToTrampoline(Pillar pillar, BiomData biomData)
+    private static void ReshapeToTrampoline(Pillar pillar, BiomContainer biomContainer)
     {
         Trampoline trampoline = pillar.Trampoline;
         trampoline.enabled = true;
 
         ReshapeTo(pillar, 
-                  Random.Range(biomData.TrampolineBodyHeightRange.x, biomData.TrampolineBodyHeightRange.y),
-                  Random.Range(biomData.TrampolineFloorSizeRange.x, biomData.TrampolineFloorSizeRange.y),
+                  Random.Range(biomContainer.TrampolineBodyHeightRange.Min, biomContainer.TrampolineBodyHeightRange.Max),
+                  Random.Range(biomContainer.TrampolineFloorSizeRange.Min, biomContainer.TrampolineFloorSizeRange.Max),
                   trampoline.BodyColor, 
                   trampoline.FloorColor);
 
@@ -80,19 +80,19 @@ public static class PillarTransformator
     }
 
 
-    private static void AddPuddle(Pillar pillar, BiomData biomData)
+    private static void AddPuddle(Pillar pillar, BiomContainer biomContainer)
     {
         Puddle puddle = pillar.Puddle;
         puddle.enabled = true;
         puddle.gameObject.SetActive(true);
 
-        if (Random.value <= biomData.PuddleBoostChance)
+        if (Random.value <= biomContainer.PuddleBoostChance)
         {
             puddle.SlowPuddle.SetActive(false);
             puddle.BoostPuddle.SetActive(true);
 
-            puddle.PuddleText.text = (int)(biomData.PuddleBoostPower * 100) + "%";
-            puddle.BoostPower = biomData.PuddleBoostPower;
+            puddle.PuddleText.text = (int)(biomContainer.PuddleBoostPower * 100) + "%";
+            puddle.BoostPower = biomContainer.PuddleBoostPower;
             puddle.CurrentType = Puddle.PuddleTypes.BOOST;
             return;
         }
@@ -102,21 +102,21 @@ public static class PillarTransformator
             puddle.SlowPuddle.SetActive(true);
             puddle.BoostPuddle.SetActive(false);
 
-            puddle.PuddleText.text = (int)(biomData.PuddleSlowPower * 100) + "%";
-            puddle.BoostPower = biomData.PuddleSlowPower * -1;
+            puddle.PuddleText.text = (int)(biomContainer.PuddleSlowPower * 100) + "%";
+            puddle.BoostPower = biomContainer.PuddleSlowPower * -1;
             puddle.CurrentType = Puddle.PuddleTypes.SLOW;
         }
     }
 
-    private static void AddDiamond(Diamond diamond, DiamondsData.DiamondType upperBound, DiamondsData diamondsData)
+    private static void AddDiamond(Diamond diamond, DiamondType upperBound, DiamondsData diamondsData)
     {
         float randomValue = Random.value;
         DiamondsData.DiamondData selectedData = diamondsData.DataList[0];
 
         foreach (var data in diamondsData.DataList)
         {
-            DiamondsData.DiamondType type = data.Type;
-            if (type != DiamondsData.DiamondType.COMMON)
+            DiamondType type = data.Type;
+            if (type != DiamondType.COMMON)
             {
                 if (randomValue <= data.Probability)
                 {

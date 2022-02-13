@@ -3,11 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+public enum DiamondType
+{
+    COMMON,   // White color  - 1
+    RARE,     // Blue color   - 10
+    MYTHICAL, // Purple color - 500
+    DRAGON,   // Red color    - 5.000
+    ONYKS     // Black color  - 50.000
+}
+
 public class Diamond : MonoBehaviour
 {
     public static UnityAction<int> DiamondGathered;
 
-    [SerializeField] private DiamondsData.DiamondType currentType;
+    [SerializeField] private DiamondType currentType;
     [SerializeField] private GameObject gatherParticleSystem;
     [SerializeField] private Renderer _renderer;
     [SerializeField] private float diamondLifetime;
