@@ -800,8 +800,8 @@ MonoBehaviour:
   predefinedBioms:
   - {fileID: 11400000, guid: 46131ca02caf8bb47a4cb6e0aa96e722, type: 2}
   specialBioms:
-  - BiomData: {fileID: 0}
-    SpawnChance: 0
+  - BiomData: {fileID: 11400000, guid: 99010374f25b1404faab364d6ea247a1, type: 2}
+    SpawnChance: 0.05
   colorsForPillars:
   - FloorColor: {r: 0, g: 0, b: 0, a: 0}
     BodyColor: {r: 0, g: 0, b: 0, a: 0}
@@ -826,7 +826,7 @@ MonoBehaviour:
   - FloorColor: {r: 0, g: 0, b: 0, a: 0}
     BodyColor: {r: 0, g: 0, b: 0, a: 0}
   maxBiomGeneration: 0
-  infiniteGeneration: 0
+  infiniteGeneration: 1
   generatorSetupScriptable: {fileID: 11400000, guid: faeef45795b33644993432cac49a3527, type: 2}
   diamondsData: {fileID: 11400000, guid: 8e1c720ebc331f94faee93c95810e45d, type: 2}
 --- !u!1001 &1346024083304651131
