@@ -48,7 +48,10 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
     public int GeneratedRings { get => generatedRings; }
 
     private float generatedRadius;
+    public float GeneratedRadius { get => generatedRadius; }
+
     private float overlappedDistance;
+    public float OverlappedDistance { get => overlappedDistance; }
 
     private int overlappedRings;
 
@@ -60,13 +63,13 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
     private bool isPooling;
     public bool IsPooling { get => isPooling; }
 
-    private bool isEditorUsing;
-    public bool IsEditorUsing { get => isEditorUsing;  set => isEditorUsing = value; }
+    private bool isNotEditorUsing;
+    public bool IsNotEditorUsing { get => isNotEditorUsing;  set => isNotEditorUsing = value; }
 
 
     private void Start()
     {
-        isEditorUsing = false;
+        isNotEditorUsing = true;
 
         ballTransform = PlayerController.Instance.transform;
         biomsGenerator.Initialize();
@@ -117,14 +120,16 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
     private void FixedUpdate()
     {
         // New ring
-        var resultVector = ballTransform.position - originCenter.transform.position;
+        var resultVector = new Vector2(
+            ballTransform.position.x - originCenter.transform.position.x, 
+            ballTransform.position.z - originCenter.transform.position.z);
 
-        if (resultVector.magnitude >= overlappedDistance + biomsGenerator.CurrentBiom.RingStep)
+        if (resultVector.magnitude >= overlappedDistance + biomsGenerator.PreviousRingBiom.RingStep)
         {
             OverlapRing(true);
             NewRingEvent.Invoke();
 
-            overlappedDistance += biomsGenerator.CurrentBiom.RingStep;
+            overlappedDistance += biomsGenerator.PreviousRingBiom.RingStep;
         }
     }
 
@@ -164,7 +169,7 @@ public class ProceduralGeneration : MonoBehaviourSingleton<ProceduralGeneration>
         float thetaMin = ballMoveAngle - fixedRenderFov / 2f;
         float thetaMax = ballMoveAngle + fixedRenderFov / 2f;
 
-        if (isEditorUsing || generatedRings <= renderRings + 1)
+        if (!isNotEditorUsing || generatedRings <= renderRings + 1)
         {
             thetaMin = -ballTransform.rotation.eulerAngles.y - fixedRenderFov / 2f + 90f;
             thetaMax = -ballTransform.rotation.eulerAngles.y + fixedRenderFov / 2f + 90f;

@@ -24,8 +24,16 @@ public class ProceduralGenerationEditor : Editor
 
         CustomEditorUtilities.HorizontalInspectorLine(Color.gray, textBelow: "Debug area");
         GUILayout.Label("Generated rings: " + proc.GeneratedRings);
+        GUILayout.Label("Generated radius: " + proc.GeneratedRadius);
+        GUILayout.Label("Overlapped distance: " + proc.OverlappedDistance);
+        GUILayout.Label("Difference distance: " + (proc.GeneratedRadius - proc.OverlappedDistance));
         GUILayout.Label("Current biom: " + proc.BiomsGenerator.CurrentBiom.BiomName);
         GUILayout.Label("Pooling is active: " + proc.IsPooling);
+
+        if (proc.IsNotEditorUsing)
+        {
+            return;
+        }
 
         CustomEditorUtilities.HorizontalInspectorLine(Color.gray, textBelow: "Test procedural generation area");
 
@@ -41,7 +49,7 @@ public class ProceduralGenerationEditor : Editor
         GUI.backgroundColor = new Color32(119, 198, 110, 255);
         if (GUILayout.Button("Next ring"))
         {
-            proc.IsEditorUsing = true;
+            proc.IsNotEditorUsing = false;
 
             Random.InitState((int)Time.realtimeSinceStartup);
             if (proc.GeneratedRings == 0)

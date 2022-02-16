@@ -66,6 +66,9 @@ public class BiomsGenerator : MonoBehaviour
     private DiamondsData diamondsData;
     public DiamondsData DiamondsData { get => diamondsData; }
 
+    private BiomContainer previousRingBiom;
+    public BiomContainer PreviousRingBiom { get => previousRingBiom; set => previousRingBiom = value; }
+
     private BiomContainer currentBiom;
     public BiomContainer CurrentBiom
     {
@@ -81,6 +84,7 @@ public class BiomsGenerator : MonoBehaviour
     }
 
     private bool isGenerating;
+    private bool ringAfterNextBiom;
 
     private int generatedBiomNumber;
     private int biomsToPass;
@@ -90,6 +94,8 @@ public class BiomsGenerator : MonoBehaviour
     {
         currentBiom = predefinedBioms[0].Biom;
         currentBiom.CurrentRing = 0;
+
+        previousRingBiom = currentBiom;
 
         generatorSetup = new BiomsGeneratorSetup(generatorSetupScriptable.BiomsGeneratorSetup);
     }
@@ -139,6 +145,17 @@ public class BiomsGenerator : MonoBehaviour
         if (IsNewBiom())
         {
             GoNextBiom();
+            ringAfterNextBiom = true;
+            return;
+        }
+
+        if (!ringAfterNextBiom)
+        {
+            previousRingBiom = currentBiom;
+        }
+        else
+        {
+            ringAfterNextBiom = false;
         }
     }
 
@@ -168,8 +185,8 @@ public class BiomsGenerator : MonoBehaviour
         var newRingStep = previousBiom.RingStep + generatorSetup.RingStepIncreaseRange.GetRandomFromRange();
         nextBiom.RingStep = Mathf.Min(newRingStep, 55f);
 
-        var newFrequency = previousBiom.PillarsFrequency - generatorSetup.FrequencyDecreaseRange.GetRandomFromRange();
-        nextBiom.PillarsFrequency = Mathf.Min(newFrequency, 60f);
+        var newFrequency = previousBiom.PillarsFrequency + generatorSetup.FrequencyDecreaseRange.GetRandomFromRange();
+        nextBiom.PillarsFrequency = Mathf.Min(newFrequency, 65f);
 
         nextBiom.RingStepNoise = new Vector2(UnityEngine.Random.Range(generatorSetup.RingStepNoise.x, generatorSetup.RingStepNoise.y),
                                              UnityEngine.Random.Range(generatorSetup.RingStepNoise.x, generatorSetup.RingStepNoise.y));
@@ -203,7 +220,7 @@ public class BiomsGenerator : MonoBehaviour
         var newPuddleBoostPower = previousBiom.PuddleBoostPower + generatorSetup.BoostPowerIncreaseRange.GetRandomFromRange();
         nextBiom.PuddleBoostPower = Mathf.Min(newPuddleBoostPower, 0.3f);
 
-        var newPuddleSlowPower = previousBiom.PuddleSlowPower + generatorSetup.SlowPowerIncreaseRange.GetRandomFromRange();
+        var newPuddleSlowPower = previousBiom.PuddleBoostPower + generatorSetup.SlowPowerIncreaseRange.GetRandomFromRange();
         nextBiom.PuddleSlowPower = Mathf.Min(newPuddleSlowPower, 0.45f);
 
 
@@ -223,7 +240,12 @@ public class BiomsGenerator : MonoBehaviour
 
         nextBiom.DiamondsSpawnChance = Mathf.Min(newDiamondsSpawnChance, 0.35f);
         
-        if (generatedBiomNumber % biomsToPass == 0)
+        if (biomsToPass == 0)
+        {
+            biomsToPass = (int)generatorSetup.BiomsToIncreaseUpperBoundRange.GetRandomFromRange();
+            nextBiom.DiamondsUpperBound = previousBiom.DiamondsUpperBound;
+        }
+        else if (generatedBiomNumber % biomsToPass == 0)
         {
             var diamondTypes = Enum.GetValues(typeof(DiamondType)).Cast<DiamondType>().ToList();
             var previousUpperBoundIndex = diamondTypes.IndexOf(previousBiom.DiamondsUpperBound);

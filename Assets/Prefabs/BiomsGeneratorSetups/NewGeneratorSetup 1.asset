@@ -14,19 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BiomsGeneratorSetup:
     RingStepIncreaseRange:
-      Min: 2
-      Max: 4
+      Min: 1
+      Max: 3
     RingsToNext: 15
     FrequencyDecreaseRange:
-      Min: 2
-      Max: 4
+      Min: 5
+      Max: 10
     RingStepNoise: {x: 2, y: 3}
     FloorSizeDecreaseRange:
       Min: 0.025
       Max: 0.05
     BodyHeightIncreaseRange:
-      Min: 0.2
-      Max: 0.5
+      Min: 0.08
+      Max: 0.15
     PuddleSpawnChanceIncreaseRange:
       Min: 0.025
       Max: 0.05
@@ -34,11 +34,11 @@ MonoBehaviour:
       Min: 0.3
       Max: 0.7
     BoostPowerIncreaseRange:
-      Min: 0.01
-      Max: 0.025
+      Min: 0.025
+      Max: 0.01
     SlowPowerIncreaseRange:
-      Min: 0.01
-      Max: 0.025
+      Min: 0.025
+      Max: 0.01
     TrampolineSpawnChanceRange:
       Min: 0.1
       Max: 0.2

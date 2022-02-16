@@ -71,7 +71,7 @@ public class Pillar : MonoBehaviour
     public void Disable(string animation)
     {
         lifetime = 0;
-        if (ProceduralGeneration.Instance.IsEditorUsing)
+        if (!ProceduralGeneration.Instance.IsNotEditorUsing)
         {
             gameObject.SetActive(false);
         }

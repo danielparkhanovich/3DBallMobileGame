@@ -35,9 +35,9 @@ MonoBehaviour:
       Min: 1.4
       Max: 1.45
     TrampolineBodyHeightRange:
-      Min: 0.85
-      Max: 0.9
+      Min: 0.9
+      Max: 1
     DiamondsSpawnChance: 0.05
     DiamondsUpperBound: 0
-    CurrentRing: 0
+    CurrentRing: 5
   diamondsData: {fileID: 11400000, guid: 8e1c720ebc331f94faee93c95810e45d, type: 2}
