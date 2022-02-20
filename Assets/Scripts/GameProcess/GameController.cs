@@ -10,9 +10,19 @@ public enum GameStateType
     PAUSED,
     PLAY
 }
+public enum Platform
+{
+    Windows,
+    Mobile
+}
 
 public class GameController : MonoBehaviourSingleton<GameController>
 {
+    [SerializeField]
+    private Platform curentSystemPlatform;
+    public Platform CurrentSystemPlatform { get => curentSystemPlatform; }
+
+    [SerializeField]
     private PlayerController player;
     public PlayerController Player
     { 
@@ -58,7 +68,13 @@ public class GameController : MonoBehaviourSingleton<GameController>
 
     public void GameOver()
     {
+        DataManager.PlayerData.RefreshData(player.CollectedDiamonds, player.OverlappedRings);
         SceneManager.Instance.StartGame();
+    }
+
+    public void BackToMenu()
+    {
+        SceneManager.Instance.BackToMenu();
     }
 
     public void PauseGame()

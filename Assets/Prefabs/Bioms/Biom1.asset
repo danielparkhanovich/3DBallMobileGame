@@ -25,7 +25,7 @@ MonoBehaviour:
       Min: 0.9
       Max: 1
     PillarsFloorColor: {r: 0.50437677, g: 0.7735849, b: 0.38314345, a: 0}
-    PillarsBodyColor: {r: 0.254717, g: 0.254717, b: 0.254717, a: 0}
+    PillarsBodyColor: {r: 0.21176471, g: 0.27058825, b: 0.30980393, a: 1}
     PuddleSpawnChance: 0
     PuddleBoostChance: 0
     PuddleBoostPower: 0
@@ -39,5 +39,5 @@ MonoBehaviour:
       Max: 1
     DiamondsSpawnChance: 0.05
     DiamondsUpperBound: 0
-    CurrentRing: 5
+    CurrentRing: 7
   diamondsData: {fileID: 11400000, guid: 8e1c720ebc331f94faee93c95810e45d, type: 2}

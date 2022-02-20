@@ -29,7 +29,10 @@ public class PlayerController : MonoBehaviourSingleton<PlayerController>
     private Vector2 minSpeed;
 
     private int collectedDiamonds;
+    public int CollectedDiamonds { get => collectedDiamonds; }
+
     private int overlappedRings;
+    public int OverlappedRings { get => overlappedRings; }
 
     private float currentRotateDirection;
 
@@ -105,6 +108,14 @@ public class PlayerController : MonoBehaviourSingleton<PlayerController>
         {
             // Lose
             GameController.Instance.GameOver();
+        }
+
+        if (pillar)
+        {
+            if (GameController.Instance.CurrentSystemPlatform == Platform.Mobile)
+            {
+                Handheld.Vibrate();
+            }
         }
     }
 

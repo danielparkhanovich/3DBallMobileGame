@@ -4,14 +4,6 @@ using UnityEngine;
 
 public class ProcessInput : MonoBehaviour
 {
-    private enum Platform
-    {
-        Windows,
-        Mobile
-    }
-
-    [SerializeField]
-    private Platform curentSystemPlatform;
     [SerializeField]
     private PlayerController playerController;
 
@@ -20,7 +12,7 @@ public class ProcessInput : MonoBehaviour
 
     private void Start()
     {
-        if (curentSystemPlatform == Platform.Windows)
+        if (GameController.Instance.CurrentSystemPlatform == Platform.Windows)
         {
             handleInput = new HandleWindows();
         }

@@ -215,8 +215,11 @@ public class BiomsGenerator : MonoBehaviour
         nextBiom.PillarsBodyColor  = colorsForPillars[generatedBiomNumber % colorsForPillars.Count].BodyColor;
 
         var newPuddleSpawnChance = previousBiom.PuddleSpawnChance + generatorSetup.PuddleSpawnChanceIncreaseRange.GetRandomFromRange();
-        nextBiom.PuddleSpawnChance = Mathf.Min(newPuddleSpawnChance, 0.75f);       
-        
+        nextBiom.PuddleSpawnChance = Mathf.Min(newPuddleSpawnChance, 0.75f);
+
+        var newPuddleBootChance = generatorSetup.BoostChanceRange.GetRandomFromRange();
+        nextBiom.PuddleBoostChance = newPuddleBootChance;
+
         var newPuddleBoostPower = previousBiom.PuddleBoostPower + generatorSetup.BoostPowerIncreaseRange.GetRandomFromRange();
         nextBiom.PuddleBoostPower = Mathf.Min(newPuddleBoostPower, 0.3f);
 

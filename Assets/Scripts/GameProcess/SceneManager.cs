@@ -27,7 +27,7 @@ public class SceneManager : MonoBehaviourSingletonPersistent<SceneManager>
         StartGame();
     }
 
-    public void GoToMenu()
+    public void BackToMenu()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
         currentScene = SceneType.MAINMENU;
